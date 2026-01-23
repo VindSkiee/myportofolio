@@ -18,7 +18,7 @@ const baloo2 = Baloo_2({
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: "200",
+  weight: "400",
   variable: "--font-plus-jakarta-sans",
   display: "swap",
 });
