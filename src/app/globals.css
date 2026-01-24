@@ -31,6 +31,7 @@ html, body {
   overflow-y: auto; /* Aktifkan scroll vertikal */
   overflow-x: hidden; /* Sembunyikan scroll horizontal */
   position: relative;
+  scroll-behavior: smooth; /* Smooth scroll untuk anchor links */
 }
 
 /* --- Styling Scrollbar pada Wrapper --- */

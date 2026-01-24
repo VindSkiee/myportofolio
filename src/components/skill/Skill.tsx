@@ -18,7 +18,7 @@ const skills = [
 
 export default function SkillsSection() {
   return (
-    <section className="relative w-full min-h-full py-32 bg-black flex flex-col items-center justify-center overflow-hidden">
+    <section id="skill" className="relative w-full min-h-full py-32 bg-black flex flex-col items-center justify-center overflow-hidden">
       
       {/* --- BACKGROUND ELEMENTS --- */}
       

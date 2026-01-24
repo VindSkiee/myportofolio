@@ -1,0 +1,41 @@
+/* =========================================
+   PROJECT VAULT STYLES
+========================================= */
+
+/* Grid Background untuk texture teknikal */
+.bg-tech-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Animasi Garis Scan */
+@keyframes scan-line {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(500%); opacity: 0; }
+}
+
+.group:hover .scan-effect {
+  animation: scan-line 2s linear infinite;
+}
+
+/* Corner Brackets (Hiasan Sudut Teknis) */
+.corner-bracket {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #008cff;
+  border-style: solid;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* Tampilkan bracket saat hover */
+.group:hover .corner-bracket { opacity: 1; }
+
+.corner-tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.corner-tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+.corner-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+.corner-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
