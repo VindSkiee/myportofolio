@@ -65,3 +65,29 @@ html, body {
   background-color: rgba(255, 255, 255, 0.8) !important;
   transition: background-color 0.1s ease-in;
 }
+
+/* =========================================
+   FOOTER ANIMATIONS
+========================================= */
+
+/* Animasi Teks Berjalan (Marquee) */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+
+/* Animasi Lampu Kedip (Status Light) */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-blink {
+  animation: blink 2s infinite;
+}

@@ -33,10 +33,16 @@ export default function SkillsSection() {
         
         {/* Section Header */}
         <div className="text-center mb-16">
-          <h2 className="font-jakarta text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Technical Proficiency
+          <span className="text-[#008cff] font-mono text-sm tracking-widest uppercase mb-2 block">
+            // Tech Stack
+          </span>
+          <h2 className="font-jakarta text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            Technical <br className="md:hidden" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
+              Proficiency.
+            </span>
           </h2>
-          <p className="font-jakarta text-white/50 text-lg max-w-2xl mx-auto">
+          <p className="font-jakarta text-white/50 text-sm md:text-base max-w-2xl mx-auto">
             A curated list of technologies I use to build robust and scalable applications.
           </p>
         </div>

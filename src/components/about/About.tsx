@@ -91,7 +91,7 @@ export default function AboutSection() {
                     </div>
 
                     {/* --- RIGHT SIDE: STORY (Sama seperti sebelumnya) --- */}
-                    <div ref={contentRef} className="w-full md:w-7/12 opacity-0">
+                    <div ref={contentRef} className="w-full md:w-7/12 opacity-0 text-center md:text-left">
                         {/* ... Content text sama persis ... */}
                         <div className="inline-block px-3 py-1 mb-6 border border-[#008cff]/30 rounded-full bg-[#008cff]/10 text-[#008cff] text-xs font-medium tracking-wider uppercase">
                             About Me
@@ -99,12 +99,12 @@ export default function AboutSection() {
 
                         <h2 className="font-jakarta text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
                             Bridging the gap between <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/40">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
                                 Logic and Creativity.
                             </span>
                         </h2>
 
-                        <div className="space-y-6 font-jakarta text-white/60 text-lg leading-relaxed">
+                        <div className="space-y-6 mt-10 font-jakarta text-white/60 text-sm md:text-base leading-relaxed">
                             <p>
                                 I am a Software Engineering student at Telkom University with a deep focus on
                                 <span className="text-white font-medium"> Backend Development</span>.
@@ -113,7 +113,7 @@ export default function AboutSection() {
                             </p>
 
                             <p>
-                                That's why I'm expanding into Frontend—to ensure the systems I build aren't just powerful,
+                                That's why I'm expanding into Frontend to ensure the systems I build aren't just powerful,
                                 but also beautiful and usable.
                             </p>
 

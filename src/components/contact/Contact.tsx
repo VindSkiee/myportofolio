@@ -1,8 +1,9 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import emailjs from "@emailjs/browser";
 import "./stackedForm.css"
 
 gsap.registerPlugin(ScrollTrigger);
@@ -11,6 +12,57 @@ export default function ContactSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const leftSideRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  // Handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+
+    try {
+      await emailjs.send(
+        "service_77ex519", // Ganti dengan Service ID dari EmailJS
+        "template_eveuy4h", // Ganti dengan Template ID dari EmailJS
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        },
+        "F3KRRNWroKN2m4y0g" // Ganti dengan Public Key dari EmailJS
+      );
+
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", message: "" }); // Reset form
+      
+      // Reset status setelah 5 detik
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } catch (error) {
+      console.error("Email sending failed:", error);
+      setSubmitStatus("error");
+      
+      // Reset status setelah 5 detik
+      setTimeout(() => setSubmitStatus("idle"), 5000);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -77,15 +129,18 @@ export default function ContactSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-8 items-center">
           
           {/* --- LEFT SIDE: HEADLINE & SOCIAL DOCK (KODE KAMU) --- */}
-          <div ref={leftSideRef} className="opacity-0">
-            <h2 className="font-jakarta text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+          <div ref={leftSideRef} className="opacity-0 text-center md:text-left">
+            <span className="text-[#008cff] font-mono text-sm tracking-widest uppercase mb-4 block">
+              // Get In Touch
+            </span>
+            <h2 className="font-jakarta text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
               Let's build something <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#008cff] to-[#00c6ff]">
                 legendary together.
               </span>
             </h2>
             
-            <p className="font-jakarta text-white/60 text-lg mb-12 max-w-md">
+            <p className="font-jakarta text-white/60 text-sm md:text-base mb-12 max-w-md mx-auto md:mx-0">
               Have a project in mind or just want to discuss backend architecture? 
               I'm always open to new opportunities and connections.
             </p>
@@ -99,7 +154,7 @@ export default function ContactSection() {
               <div className="relative flex items-end gap-x-4 p-4">
                 
                 {/* 1. GITHUB */}
-                <Link href="https://github.com" target="_blank" className="relative group">
+                <Link href="https://github.com/VindSkiee" target="_blank" className="relative group">
                   <div
                     style={{ clipPath: "url(#squircleClip)" }}
                     className="w-14 h-14 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center shadow-lg border border-gray-600/50 cursor-pointer transform transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-2 group-hover:shadow-cyan-500/20"
@@ -111,37 +166,13 @@ export default function ContactSection() {
                 </Link>
 
                 {/* 2. LINKEDIN */}
-                <Link href="https://linkedin.com" target="_blank" className="relative group">
+                <Link href="https://www.linkedin.com/in/muhammad-arvind-alaric-717b082a1/" target="_blank" className="relative group">
                   <div
                     style={{ clipPath: "url(#squircleClip)" }}
                     className="w-14 h-14 bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-lg border border-blue-500/50 cursor-pointer transform transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-2 group-hover:shadow-blue-500/30"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-white">
                       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                    </svg>
-                  </div>
-                </Link>
-
-                {/* 3. YOUTUBE */}
-                <Link href="https://youtube.com" target="_blank" className="relative group">
-                  <div
-                    style={{ clipPath: "url(#squircleClip)" }}
-                    className="w-14 h-14 bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center shadow-lg border border-red-500/50 cursor-pointer transform transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-2 group-hover:shadow-red-500/30"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-white">
-                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                    </svg>
-                  </div>
-                </Link>
-
-                {/* 4. DISCORD */}
-                <Link href="https://discord.com" target="_blank" className="relative group">
-                  <div
-                    style={{ clipPath: "url(#squircleClip)" }}
-                    className="w-14 h-14 bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center shadow-lg border border-indigo-500/50 cursor-pointer transform transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-2 group-hover:shadow-indigo-500/30"
-                  >
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-7 w-7 text-white">
-                      <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0189 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z" />
                     </svg>
                   </div>
                 </Link>
@@ -155,16 +186,20 @@ export default function ContactSection() {
             
             {/* HAPUS opacity-0 PADA FORM */}
             {/* Tambahkan 'pt-10' (padding top) agar ujung 3D atas tidak kepotong */}
-            <form ref={formRef} className="w-full pt-10">
+            <form ref={formRef} className="w-full pt-10" onSubmit={handleSubmit}>
               
-              <ul className="stack-form-wrapper right-10">
+              <ul className="stack-form-wrapper md:right-10">
                 {/* 1. NAME */}
                 <li style={{ "--i": 4 } as React.CSSProperties}>
                   <input 
                     className="input" 
-                    type="text" 
-                    placeholder="Full Name" 
-                    required 
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    disabled={isSubmitting}
                   />
                 </li>
 
@@ -172,27 +207,37 @@ export default function ContactSection() {
                 <li style={{ "--i": 3 } as React.CSSProperties}>
                   <input 
                     className="input" 
-                    type="email" 
-                    placeholder="Email Address" 
-                    required 
+                    type="email"
+                    name="email"
+                    placeholder="Email Address"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    disabled={isSubmitting}
                   />
                 </li>
 
                 {/* 3. MESSAGE */}
                 <li style={{ "--i": 2 } as React.CSSProperties}>
                   <textarea 
-                    className="input pt-4" 
-                    placeholder="Your Message..." 
-                    required 
+                    className="input pt-4"
+                    name="message"
+                    placeholder="Your Message..."
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    disabled={isSubmitting}
                   />
                 </li>
 
                 {/* 4. BUTTON */}
                 <button 
+                  type="submit"
                   style={{ "--i": 1 } as React.CSSProperties} 
                   className="stack-btn uppercase tracking-wider"
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : submitStatus === "success" ? "Message Sent!" : submitStatus === "error" ? "Failed. Try Again" : "Send Message"}
                 </button>
               </ul>
 
