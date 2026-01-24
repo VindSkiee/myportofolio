@@ -1,0 +1,152 @@
+/* =========================================
+   3D STACKED FORM (CONTACT SECTION) - FIXED
+========================================= */
+
+/* Wrapper Utama */
+.stack-form-wrapper {
+  position: relative;
+  /* Sudut skew -10deg sudah pas untuk estetika ini */
+  transform: skewY(-10deg); 
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  /* Padding agar ujung 3D tidak terpotong */
+  padding: 100px 40px 100px 40px; 
+  isolation: isolate; 
+}
+
+/* Base Styles untuk List & Button */
+.stack-form-wrapper li, 
+.stack-btn {
+  position: relative;
+  display: block;
+  list-style: none;
+  width: 100%;
+  z-index: var(--i); 
+  /* Menggunakan transisi yang lebih "snappy" */
+  transition: transform 0.3s cubic-bezier(0.2, 0.6, 0.3, 1);
+  /* Tumpukan vertikal: Pastikan ini pas agar tidak ada celah */
+  margin-bottom: -2px; 
+}
+
+/* --- ELEMENT SIDES (3D Depth) --- */
+
+/* Sisi Kiri (Ketebalan) */
+.stack-form-wrapper li::before, 
+.stack-btn::before {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: -20px; /* Lebar sisi 3D */
+  width: 20px;
+  height: 97%; /* WAJIB 100% agar tidak ada celah antar tumpukan */
+  transform-origin: right;
+  transform: skewY(45deg);
+  transition: background 0.3s ease; /* Transisi warna saja */
+}
+
+/* Sisi Atas (Ketebalan) */
+.stack-form-wrapper li::after, 
+.stack-btn::after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 21px;
+  top: -20px;
+  left: 0;
+  transform-origin: bottom;
+  transform: skewX(45deg);
+  transition: background 0.3s ease;
+}
+
+/* --- COLOR PALETTE (Industrial Monochrome) --- */
+
+/* ITEM 1: Name (Paling Atas) */
+.stack-form-wrapper li:nth-child(1) .input { background: #ffffff; }
+.stack-form-wrapper li:nth-child(1)::before { background: #cfcfcf; } /* Shadow sedikit lebih gelap */
+.stack-form-wrapper li:nth-child(1)::after { background: #f0f0f0; } /* Highlight lebih terang */
+
+/* ITEM 2: Email (Tengah) */
+.stack-form-wrapper li:nth-child(2) .input { background: #e5e5e5; }
+.stack-form-wrapper li:nth-child(2)::before { background: #b0b0b0; }
+.stack-form-wrapper li:nth-child(2)::after { background: #dcdcdc; }
+
+/* ITEM 3: Message (Bawah) */
+.stack-form-wrapper li:nth-child(3) .input { background: #d4d4d4; }
+.stack-form-wrapper li:nth-child(3)::before { background: #999999; }
+.stack-form-wrapper li:nth-child(3)::after { background: #c0c0c0; }
+
+/* BUTTON (Paling Bawah - CYAN) */
+.stack-btn {
+  background: #008cff;
+  color: white;
+  border: none;
+  height: 50px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transform: translateY(-5px);
+}
+.stack-btn::before { background: #006bb3; } /* Sisi Gelap */
+.stack-btn::after { background: #4db8ff; } /* Sisi Terang */
+
+
+/* --- INPUT STYLING --- */
+.stack-form-wrapper .input {
+  width: 100%;
+  height: 50px;
+  padding: 15px;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-weight: 600;
+  color: #323232;
+  font-size: 16px;
+  /* Pastikan box-sizing border-box agar padding tidak merusak lebar */
+  box-sizing: border-box; 
+}
+
+/* Khusus Textarea */
+.stack-form-wrapper li:nth-child(3) .input {
+  height: 120px;
+  resize: none;
+  padding-top: 15px;
+}
+
+/* Placeholder */
+.stack-form-wrapper .input::placeholder { color: #323232; opacity: 0.5; }
+
+
+/* --- LOGIKA PERBAIKAN ALIGNMENT --- */
+
+/* Hover Effect:
+   Saat digeser ke kiri (-20px), kita harus geser ke ATAS (-5px).
+   Ini melawan efek 'turun' dari skewY(-10deg).
+   Hasilnya: Element terlihat meluncur lurus horizontal.
+*/
+/* Hover stack input */
+.stack-form-wrapper li:hover {
+  transform: translate(-20px);
+}
+.stack-btn:hover {
+  transform: translate(-20px, -5px); 
+}
+
+/* Button Hover Colors */
+.stack-btn:hover { background: #0099ff; }
+.stack-btn:hover::before { background: #007ccf; }
+.stack-btn:hover::after { background: #66c2ff; }
+
+/* Focus Effect (Saat Mengetik):
+   Maju lebih jauh (-30px), jadi naik lebih tinggi (-8px) 
+   agar tetap lurus.
+*/
+.stack-form-wrapper li:focus-within {
+  transform: translate(-30px); 
+  /* Pastikan elemen yang diketik ada di paling atas */
+}

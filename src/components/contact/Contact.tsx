@@ -3,6 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
+import "./stackedForm.css"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,22 +19,30 @@ export default function ContactSection() {
 
     if (!section || !leftSide || !form) return;
 
+    // Pastikan scroller target benar. 
+    // Jika '.scroll-container' tidak ditemukan, ScrollTrigger akan fallback ke window (default).
+    // Ini aman untuk debugging.
+    const scrollContainer = document.querySelector(".scroll-container");
+    const scrollerTarget = scrollContainer ? ".scroll-container" : window;
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
-        scroller: ".scroll-container", // Integrasi dengan custom scrollbar
+        scroller: scrollerTarget, // Otomatis deteksi
         start: "top 70%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
       },
     });
 
+    // Animasi Kiri
     tl.fromTo(
       leftSide,
       { x: -50, opacity: 0 },
       { x: 0, opacity: 1, duration: 1, ease: "power3.out" }
     );
 
+    // Animasi Form (Kanan)
     tl.fromTo(
       form,
       { x: 50, opacity: 0 },
@@ -141,50 +150,54 @@ export default function ContactSection() {
             </div>
           </div>
 
-          {/* --- RIGHT SIDE: CONTACT FORM --- */}
-          <form ref={formRef} className="w-full max-w-lg bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 opacity-0">
-            <h3 className="text-2xl font-bold text-white mb-6">Send a Message</h3>
+          {/* --- RIGHT SIDE: 3D FORM --- */}
+          <div className="w-full flex justify-center md:justify-end">
             
-            <div className="space-y-4">
-              {/* Name */}
-              <div>
-                <label className="block text-white/50 text-sm mb-2">Name</label>
-                <input 
-                  type="text" 
-                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#008cff] transition-colors"
-                  placeholder="Your Name"
-                />
-              </div>
+            {/* HAPUS opacity-0 PADA FORM */}
+            {/* Tambahkan 'pt-10' (padding top) agar ujung 3D atas tidak kepotong */}
+            <form ref={formRef} className="w-full pt-10">
+              
+              <ul className="stack-form-wrapper right-10">
+                {/* 1. NAME */}
+                <li style={{ "--i": 4 } as React.CSSProperties}>
+                  <input 
+                    className="input" 
+                    type="text" 
+                    placeholder="Full Name" 
+                    required 
+                  />
+                </li>
 
-              {/* Email */}
-              <div>
-                <label className="block text-white/50 text-sm mb-2">Email</label>
-                <input 
-                  type="email" 
-                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#008cff] transition-colors"
-                  placeholder="hello@example.com"
-                />
-              </div>
+                {/* 2. EMAIL */}
+                <li style={{ "--i": 3 } as React.CSSProperties}>
+                  <input 
+                    className="input" 
+                    type="email" 
+                    placeholder="Email Address" 
+                    required 
+                  />
+                </li>
 
-              {/* Message */}
-              <div>
-                <label className="block text-white/50 text-sm mb-2">Message</label>
-                <textarea 
-                  rows={4}
-                  className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#008cff] transition-colors"
-                  placeholder="Tell me about your project..."
-                />
-              </div>
+                {/* 3. MESSAGE */}
+                <li style={{ "--i": 2 } as React.CSSProperties}>
+                  <textarea 
+                    className="input pt-4" 
+                    placeholder="Your Message..." 
+                    required 
+                  />
+                </li>
 
-              {/* Button */}
-              <button 
-                type="submit" 
-                className="w-full py-4 mt-2 bg-[#008cff] hover:bg-[#0070cc] text-white font-bold rounded-lg transition-all duration-300 shadow-lg shadow-[#008cff]/20"
-              >
-                Send Message
-              </button>
-            </div>
-          </form>
+                {/* 4. BUTTON */}
+                <button 
+                  style={{ "--i": 1 } as React.CSSProperties} 
+                  className="stack-btn uppercase tracking-wider"
+                >
+                  Send Message
+                </button>
+              </ul>
+
+            </form>
+          </div>
 
         </div>
       </div>
