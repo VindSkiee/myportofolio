@@ -56,7 +56,7 @@ export default function HeroSection() {
     tl.to(firstChars, { opacity: 1, duration: 0.05, stagger: 0.05, ease: "none" }, "-=0.5");
 
     // Phase 3: Pause
-    tl.to({}, { duration: 1.5 });
+    tl.to({}, { duration: 0.8 });
 
     // Phase 4: First Text Hilang
     tl.to(firstText, { opacity: 0, duration: 0.4 });
