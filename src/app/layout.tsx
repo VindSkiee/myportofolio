@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Baloo_2, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import ScrollManager from "@/components/scroll/ScrollManager";
 
 // Font configurations
 const jetbrainsMono = JetBrains_Mono({
@@ -39,7 +40,13 @@ export default function RootLayout({
       className={`${jetbrainsMono.variable} ${baloo2.variable} ${plusJakartaSans.variable}`}
     >
       <body className="antialiased">
-        {children}
+        <div className="scroll-container">
+          
+          <ScrollManager /> {/* Komponen logic ditaruh di dalam */}
+          
+          {children} {/* Halaman website render disini */}
+          
+        </div>
       </body>
     </html>
   );

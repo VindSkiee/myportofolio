@@ -1,0 +1,112 @@
+/* =========================================
+   3D SHINY METALLIC CARD STYLE
+========================================= */
+
+/* 1. Definisi Animasi Kilauan (Global Keyframes) */
+@keyframes shiny-edge-move {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    /* Gerakkan background sejauh 200% lebarnya untuk menciptakan ilusi berjalan */
+    background-position: 200% 50%;
+  }
+}
+
+/* 2. Card Container Utama */
+.profile-card {
+  width: 100%;
+  height: 100%;
+  background: #0a0a0a; /* Background dalam tetap gelap */
+  position: relative;
+  transform: skewY(-10deg);
+  /* BORDER UTAMA: Abu-abu solid medium sebagai base color */
+  border: 4px solid #737373; 
+  box-sizing: border-box;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek bouncy sedikit saat hover */
+  cursor: default;
+}
+
+/* --- SISI SAMPING & ATAS (Area yang akan berkilau) --- */
+
+/* Kita gunakan selector gabungan agar kodenya lebih R.Y (Don't Repeat Yourself) */
+.profile-card::before,
+.profile-card::after {
+  content: '';
+  position: absolute;
+  border: none;
+  transition: all 0.4s ease;
+
+  /* === INTI EFEK SHINY === */
+  /* a. Buat gradient: Abu-abu -> Putih Terang (Kilau) -> Abu-abu */
+  background: linear-gradient(
+    110deg, 
+    #737373 20%,   /* Base Grey */
+    #ffffff 50%,   /* White Shine Center */
+    #737373 80%    /* Base Grey */
+  );
+  
+  /* b. Perbesar ukuran background agar ada ruang untuk bergerak */
+  background-size: 200% auto;
+  
+  /* c. Jalankan animasi 'shiny-edge-move' selamanya */
+  /* Durasi 2.5s, linear speed, infinite loop */
+  animation: shiny-edge-move 6s linear infinite;
+}
+
+/* Spesifik untuk Sisi Samping (Ketebalan Kiri) */
+.profile-card::before {
+  width: 15px;
+  height: 102%;
+  top: -4px;
+  left: -18px;
+  transform-origin: right;
+  transform: skewY(45deg);
+  /* Kita gelapkan sedikit gradient samping untuk kesan bayangan */
+  filter: brightness(0.8); 
+}
+
+/* Spesifik untuk Sisi Atas (Ketebalan Atas) */
+.profile-card::after {
+  height: 15px;
+  width: 102.7%;
+  top: -18px;
+  left: -4px;
+  transform-origin: bottom;
+  transform: skewX(45deg);
+  /* Sisi atas lebih terang karena terkena cahaya langsung */
+  filter: brightness(1.1);
+}
+
+
+/* --- HOVER EFFECTS --- */
+
+/* Saat hover, kartu menjadi datar (flat) & border menyala putih */
+.profile-card:hover {
+  transform: skewY(0deg) translateY(-10px);
+  border-color: #ffffff; /* Border utama jadi putih saat hover */
+  box-shadow: 0 10px 30px -10px rgba(255, 255, 255, 0.3); /* Glow putih */
+}
+
+/* Saat hover, sisi 3D ditarik masuk (height/width jadi 0) */
+.profile-card:hover::before {
+  width: 0px;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+
+.profile-card:hover::after {
+  width: 100%;
+  height: 0px;
+  left: 0;
+  top: 0;
+}
+
+/* Content Container */
+.profile-card-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}

@@ -12,3 +12,55 @@ body {
   background: var(--background);
   font-family: var(--font-plus-jakarta-sans), system-ui, sans-serif;
 }
+
+/* --- Global Reset --- */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden; /* MATIKAN scroll bawaan browser (PENTING) */
+  background-color: #000000; /* Warna dasar hitam */
+}
+
+/* --- Scroll Wrapper Class --- */
+/* Ini adalah container pengganti body yang bisa discroll */
+.scroll-container {
+  height: 100vh;
+  width: 100vw; /* KUNCI: Memaksa lebar full viewport termasuk area scrollbar */
+  overflow-y: auto; /* Aktifkan scroll vertikal */
+  overflow-x: hidden; /* Sembunyikan scroll horizontal */
+  position: relative;
+}
+
+/* --- Styling Scrollbar pada Wrapper --- */
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent; /* Track transparan */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background-color: transparent;
+  margin-block: 4px;
+}
+
+/* Default Thumb: Transparan (Hidden) */
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.8s ease-out;
+}
+
+/* Active Thumb: Muncul saat class 'is-scrolling' ada */
+.scroll-container.is-scrolling::-webkit-scrollbar-thumb {
+  background-color: rgba(128, 128, 128, 0.5); /* Abu-abu transparan */
+  transition: background-color 0.1s ease-in;
+}
+
+/* Hover Thumb */
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  transition: background-color 0.1s ease-in;
+}
