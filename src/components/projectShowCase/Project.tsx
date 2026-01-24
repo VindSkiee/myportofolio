@@ -232,18 +232,32 @@ export default function ProjectsSection() {
                                         </div>
 
                                         {/* Arrow Icon */}
-                                        <Link 
-                                            href="https://github.com/VindSkiee" 
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            onClick={(e) => e.stopPropagation()}
-                                            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-[#008cff] hover:rotate-45 transition-all duration-300 flex-shrink-0"
+                                        <div
+                                            role="button"
+                                            aria-label="Open GitHub Repository"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                window.open("https://github.com/VindSkiee", "_blank", "noopener,noreferrer");
+                                            }}
+                                            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer
+             group-hover:bg-[#008cff] group-hover:rotate-45 transition-all duration-300 flex-shrink-0"
                                         >
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="md:w-5 md:h-5">
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                className="md:w-5 md:h-5"
+                                            >
                                                 <path d="M7 17L17 7" />
                                                 <path d="M7 7h10v10" />
                                             </svg>
-                                        </Link>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -255,9 +269,16 @@ export default function ProjectsSection() {
 
                 {/* View All Button */}
                 <div className="mt-16 flex justify-center pb-10 p-10">
-                    <button className="btn-neon">
+                    <button
+                        type="button"
+                        onClick={() =>
+                            window.open("https://github.com/VindSkiee", "_blank", "noopener,noreferrer")
+                        }
+                        className="btn-neon"
+                    >
                         View Entire Archive
                     </button>
+
                 </div>
 
             </div>
