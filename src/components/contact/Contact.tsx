@@ -6,6 +6,16 @@ import Link from "next/link";
 import emailjs from "@emailjs/browser";
 import "./stackedForm.css"
 
+// Declare grecaptcha type
+declare global {
+  interface Window {
+    grecaptcha: {
+      execute: (siteKey: string, options: { action: string }) => Promise<string>;
+      ready: (callback: () => void) => void;
+    };
+  }
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ContactSection() {
@@ -18,9 +28,11 @@ export default function ContactSection() {
     name: "",
     email: "",
     message: "",
+    honeypot: "", // Honeypot field - should remain empty
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [rateLimitError, setRateLimitError] = useState<string>("");
 
   // Handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -33,10 +45,41 @@ export default function ContactSection() {
   // Handle form submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setRateLimitError("");
+
+    // 1. HONEYPOT VALIDATION - Bot detection
+    if (formData.honeypot) {
+      console.warn("Bot detected via honeypot");
+      return; // Silently fail for bots
+    }
+
+    // 2. RATE LIMITING - Check submission attempts
+    const now = Date.now();
+    const submissions = JSON.parse(localStorage.getItem("formSubmissions") || "[]");
+    
+    // Filter submissions from last 10 minutes
+    const recentSubmissions = submissions.filter((time: number) => now - time < 600000);
+    
+    if (recentSubmissions.length >= 3) {
+      setRateLimitError("Too many requests. Please try again in 10 minutes.");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
     try {
+      // 3. RECAPTCHA V3 - Bot protection with score
+      let recaptchaToken = "";
+      if (typeof window !== "undefined" && window.grecaptcha) {
+        try {
+          recaptchaToken = await window.grecaptcha.execute('6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh', { action: 'submit' });
+          console.log("✅ reCAPTCHA token generated");
+        } catch (error) {
+          console.warn("⚠️ reCAPTCHA failed, continuing without it:", error);
+        }
+      }
+      
       await emailjs.send(
         "service_77ex519", // Ganti dengan Service ID dari EmailJS
         "template_eveuy4h", // Ganti dengan Template ID dari EmailJS
@@ -44,12 +87,18 @@ export default function ContactSection() {
           name: formData.name,
           email: formData.email,
           message: formData.message,
+          recaptchaToken: recaptchaToken,
+          'g-recaptcha-response': recaptchaToken, // Alternative field name
         },
         "F3KRRNWroKN2m4y0g" // Ganti dengan Public Key dari EmailJS
       );
 
+      // Update rate limiting tracker
+      recentSubmissions.push(now);
+      localStorage.setItem("formSubmissions", JSON.stringify(recentSubmissions));
+
       setSubmitStatus("success");
-      setFormData({ name: "", email: "", message: "" }); // Reset form
+      setFormData({ name: "", email: "", message: "", honeypot: "" }); // Reset form
       
       // Reset status setelah 5 detik
       setTimeout(() => setSubmitStatus("idle"), 5000);
@@ -188,6 +237,25 @@ export default function ContactSection() {
             {/* Tambahkan 'pt-10' (padding top) agar ujung 3D atas tidak kepotong */}
             <form ref={formRef} className="w-full pt-10" onSubmit={handleSubmit}>
               
+              {/* Rate Limit Error Message */}
+              {rateLimitError && (
+                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
+                  {rateLimitError}
+                </div>
+              )}
+
+              {/* HONEYPOT FIELD - Hidden from users, visible to bots */}
+              <div className="absolute left-[-9999px] opacity-0 pointer-events-none" aria-hidden="true">
+                <input
+                  type="text"
+                  name="honeypot"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.honeypot}
+                  onChange={handleChange}
+                />
+              </div>
+
               <ul className="stack-form-wrapper md:right-10">
                 {/* 1. NAME */}
                 <li style={{ "--i": 4 } as React.CSSProperties}>
@@ -199,6 +267,10 @@ export default function ContactSection() {
                     value={formData.name}
                     onChange={handleChange}
                     required
+                    minLength={2}
+                    maxLength={50}
+                    pattern="^[a-zA-Z\s]+$"
+                    title="Name should only contain letters and spaces (2-50 characters)"
                     disabled={isSubmitting}
                   />
                 </li>
@@ -213,6 +285,9 @@ export default function ContactSection() {
                     value={formData.email}
                     onChange={handleChange}
                     required
+                    maxLength={100}
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                    title="Please enter a valid email address"
                     disabled={isSubmitting}
                   />
                 </li>
@@ -226,6 +301,9 @@ export default function ContactSection() {
                     value={formData.message}
                     onChange={handleChange}
                     required
+                    minLength={10}
+                    maxLength={1000}
+                    title="Message should be between 10-1000 characters"
                     disabled={isSubmitting}
                   />
                 </li>
@@ -235,7 +313,7 @@ export default function ContactSection() {
                   type="submit"
                   style={{ "--i": 1 } as React.CSSProperties} 
                   className="stack-btn uppercase tracking-wider"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !!rateLimitError}
                 >
                   {isSubmitting ? "Sending..." : submitStatus === "success" ? "Message Sent!" : submitStatus === "error" ? "Failed. Try Again" : "Send Message"}
                 </button>

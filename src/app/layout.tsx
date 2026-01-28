@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Baloo_2, Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import ScrollManager from "@/components/scroll/ScrollManager";
 
@@ -39,6 +40,12 @@ export default function RootLayout({
       lang="en" 
       className={`${jetbrainsMono.variable} ${baloo2.variable} ${plusJakartaSans.variable}`}
     >
+      <head>
+        <Script
+          src="https://www.google.com/recaptcha/api.js?render=6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh"
+          strategy="lazyOnload"
+        />
+      </head>
       <body className="antialiased">
         <div className="scroll-container">
           

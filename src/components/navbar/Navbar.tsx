@@ -41,12 +41,16 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
             </div>
 
             {/* CTA Button */}
-            <Link 
-                href="mailto:arvindalaric321@gmail.com"
+            <a
+                href="https://mail.google.com/mail/?view=cm&fs=1&to=arvindalaric321@gmail.com&su=Let's%20Work%20Together&body=Hi%20Arvind,%0A%0AI%20would%20like%20to%20discuss..."
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-neon inline-block"
             >
                 Let's Talk
-            </Link>
+            </a>
+
+
         </nav>
     );
 });

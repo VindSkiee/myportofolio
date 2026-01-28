@@ -32,6 +32,9 @@ html, body {
   overflow-x: hidden; /* Sembunyikan scroll horizontal */
   position: relative;
   scroll-behavior: smooth; /* Smooth scroll untuk anchor links */
+  /* Optimasi untuk smooth scroll dan menghindari stuttering */
+  -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
 }
 
 /* --- Styling Scrollbar pada Wrapper --- */
@@ -90,4 +93,14 @@ html, body {
 
 .animate-blink {
   animation: blink 2s infinite;
+}
+
+/* =========================================
+   RECAPTCHA BADGE HIDE
+========================================= */
+/* Sembunyikan reCAPTCHA badge di kanan bawah */
+.grecaptcha-badge {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
