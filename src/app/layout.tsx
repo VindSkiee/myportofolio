@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Baloo_2, Plus_Jakarta_Sans } from "next/font/google";
+import { JetBrains_Mono, Baloo_2, Plus_Jakarta_Sans, Outfit } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import ScrollManager from "@/components/scroll/ScrollManager";
@@ -25,6 +25,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-outfit",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "My Portfolio",
   description: "Full-Stack Developer Portfolio",
@@ -38,7 +45,7 @@ export default function RootLayout({
   return (
     <html 
       lang="en" 
-      className={`${jetbrainsMono.variable} ${baloo2.variable} ${plusJakartaSans.variable}`}
+      className={`${jetbrainsMono.variable} ${baloo2.variable} ${plusJakartaSans.variable} ${outfit.variable}`}
     >
       <head>
         <Script

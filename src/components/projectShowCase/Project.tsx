@@ -3,77 +3,16 @@ import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import "../navbar/navButton.css"
-// import Image from "next/image"; // Aktifkan jika sudah ada gambar
+import Image from "next/image";
+import "../navbar/navButton.css";
+import { PROJECTS_DATA, MEGA_PROJECT } from "@/constants/projects";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// --- DATA PROJECTS ---
-const projects = [
-    // --- ROW 1 (Span 2 + Span 1 = Full Width) ---
-    {
-        id: 1,
-        title: "Papertech IoT Core",
-        category: "IoT System",
-        description: "Real-time truck monitoring system processing 5k+ data points/sec via MQTT.",
-        tech: ["Laravel", "Redis", "MQTT"],
-        image: "/project1.jpg",
-        span: "md:col-span-2", // Kartu Besar (Dominan)
-    },
-    {
-        id: 2,
-        title: "GymOS & Store",
-        category: "SaaS Ecosystem",
-        description: "All-in-one gym membership engine merged with full-stack e-commerce.",
-        tech: ["Node.js", "Stripe", "PostgreSQL"],
-        image: "/project2.jpg",
-        span: "md:col-span-1", // Kartu Kecil (Compact)
-    },
-
-    // --- ROW 2 (Span 1 + Span 2 = Full Width) ---
-    {
-        id: 3,
-        title: "AI Microservice",
-        category: "AI Infrastructure",
-        description: "Dedicated Python service for handling LLM prompts with rate-limiting.",
-        tech: ["Python", "FastAPI", "Docker"],
-        image: "/project3.jpg",
-        span: "md:col-span-1", // Kartu Kecil
-    },
-    {
-        id: 4,
-        title: "Wedding Platform",
-        category: "Fullstack SaaS",
-        description: "Digital invitation platform with customizable themes and RSVP management.",
-        tech: ["Next.js", "Prisma", "AWS S3"],
-        image: "/project4.jpg",
-        span: "md:col-span-2", // Kartu Besar (Visual Heavy)
-    },
-
-    // --- ROW 3 (Span 1 + Span 2 = Full Width) ---
-    {
-        id: 5,
-        title: "CyberSec Scanner",
-        category: "Security Tool",
-        description: "Internal CLI tool to scan backend endpoints for vulnerabilities.",
-        tech: ["Golang", "Linux", "Bash"],
-        image: "/project5.jpg",
-        span: "md:col-span-1", // Kartu Kecil
-    },
-    {
-        id: 6,
-        title: "Distributed Gateway",
-        category: "Backend Architecture",
-        description: "Centralized entry point handling auth, load balancing, and routing.",
-        tech: ["Nginx", "Lua", "Redis"],
-        image: "/project6.jpg",
-        span: "md:col-span-2", // Kartu Besar (Penutup yang kuat)
-    },
-];
 
 export default function ProjectsSection() {
     const sectionRef = useRef<HTMLDivElement>(null);
     const titleRef = useRef<HTMLDivElement>(null);
+    const megaRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -105,7 +44,18 @@ export default function ProjectsSection() {
             { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
         );
 
-        // 2. Grid Animation (Stagger Effect)
+        // 2. Mega Project Animation
+        const megaCard = megaRef.current;
+        if (megaCard) {
+            tl.fromTo(
+                megaCard,
+                { y: 80, opacity: 0, scale: 0.98 },
+                { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" },
+                "-=0.4"
+            );
+        }
+
+        // 3. Grid Animation (Stagger Effect)
         const cards = grid.querySelectorAll(".project-card");
         tl.fromTo(
             cards,
@@ -162,13 +112,149 @@ export default function ProjectsSection() {
                     </p>
                 </div>
 
+                {/* --- MEGA PROJECT SPOTLIGHT --- */}
+                <div ref={megaRef} className="mb-12">
+                    <h3 className="text-center text-[#008cff] font-mono text-sm tracking-widest uppercase mb-6">
+                        // Mega Project
+                    </h3>
+                    
+                    {/* ========== GRADIENT WRAPPER (Shimmer Border) ========== */}
+                    {/* 
+                      The wrapper creates the "border" effect:
+                      - p-[2px] = border thickness
+                      - bg-shimmer-prismatic-sync = the prismatic gradient
+                      - animate-shimmer-sync = synchronized animation
+                      The inner card blocks the center, leaving only the edge visible
+                    */}
+                    <div 
+                        className="p-[2px] rounded-2xl bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync overflow-hidden"
+                    >
+                        {/* ========== INNER CARD (Dark Content Area) ========== */}
+                        <Link
+                            href={MEGA_PROJECT.link}
+                            className="project-card group relative block w-full h-[350px] md:h-[400px] rounded-2xl bg-[#0a0a0a] overflow-hidden transition-all duration-500 hover:shadow-[0_0_50px_rgba(20,184,166,0.2)]"
+                        >
+                            {/* Status Badge */}
+                            <div className="absolute top-4 right-4 z-20">
+                                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full backdrop-blur-md ${
+                                    MEGA_PROJECT.status === 'ongoing' 
+                                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' 
+                                        : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                }`}>
+                                    {MEGA_PROJECT.status === 'ongoing' ? 'Ongoing' : 'Finished'}
+                                </span>
+                            </div>
+
+                            {/* Premium Glow Effect */}
+                            <div 
+                                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                                style={{
+                                    background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.1) 0%, transparent 70%)'
+                                }}
+                            />
+
+                            {/* Image Layer */}
+                            <div className="absolute inset-0 w-full h-full">
+                                <div className="relative w-full h-full bg-[#0d0d0d] group-hover:scale-105 transition-transform duration-700 ease-in-out">
+                                    <Image 
+                                        src={MEGA_PROJECT.photo || "/placeholder.jpg"} 
+                                        alt={MEGA_PROJECT.title} 
+                                        fill 
+                                        className="object-cover opacity-40 grayscale group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-500" 
+                                    />
+                                    {/* Fallback Text */}
+                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-7xl md:text-9xl uppercase tracking-tighter -z-10">
+                                        MEGA
+                                    </div>
+                                </div>
+                                {/* Dark Overlay - Keeps description readable */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/70 to-transparent" />
+                            </div>
+
+                            {/* Corner Brackets */}
+                            <div className="corner-bracket corner-tl" />
+                            <div className="corner-bracket corner-tr" />
+                            <div className="corner-bracket corner-bl" />
+                            <div className="corner-bracket corner-br" />
+
+                            {/* Content */}
+                            <div className="absolute inset-0 p-6 md:p-10 flex flex-col justify-between z-10 pointer-events-none">
+                                {/* Tech Pills */}
+                                <div className="flex flex-wrap gap-2 transform md:-translate-y-4 opacity-100 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300">
+                                    {MEGA_PROJECT.tech.map((t, i) => (
+                                        <span 
+                                            key={i} 
+                                            className="px-3 py-1 text-xs font-medium rounded-full backdrop-blur-md text-teal-400 bg-teal-500/15 border border-teal-500/30"
+                                        >
+                                            {t}
+                                        </span>
+                                    ))}
+                                </div>
+
+                                {/* Title & Description */}
+                                <div className="transform md:translate-y-4 md:group-hover:translate-y-0 transition-transform duration-300">
+                                    <div className="flex justify-between items-end gap-4">
+                                        <div className="flex-1 min-w-0">
+                                            <span className="text-xs font-mono uppercase tracking-wider mb-2 block opacity-80 text-teal-400">
+                                                {MEGA_PROJECT.category}
+                                            </span>
+                                            
+                                            {/* ========== SYNCHRONIZED SHIMMER TITLE ========== */}
+                                            {/* 
+                                              Same gradient & animation as the border wrapper.
+                                              This creates the "laser scan" passing through effect.
+                                            */}
+                                            <h3 
+                                                className="text-3xl md:text-5xl font-outfit font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync"
+                                            >
+                                                {MEGA_PROJECT.title}
+                                            </h3>
+                                            
+                                            {/* Description stays static/dark */}
+                                            <p className="text-white/60 text-sm md:text-base line-clamp-2 md:line-clamp-3 max-w-2xl">
+                                                {MEGA_PROJECT.description}
+                                            </p>
+                                        </div>
+
+                                        {/* ========== SYNCHRONIZED SHIMMER ICON ========== */}
+                                        {/* 
+                                          The icon wrapper uses the same shimmer.
+                                          Inner circle is dark, creating a "ring" effect.
+                                        */}
+                                        <div className="flex-shrink-0">
+                                            <div className="p-[2px] rounded-full bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync">
+                                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white cursor-pointer group-hover:rotate-45 transition-all duration-300">
+                                                    <svg
+                                                        width="20"
+                                                        height="20"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        className="md:w-6 md:h-6 text-teal-400 group-hover:text-white transition-colors"
+                                                    >
+                                                        <path d="M7 17L17 7" />
+                                                        <path d="M7 7h10v10" />
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Link>
+                    </div>
+                </div>
+
                 {/* --- BENTO GRID VAULT --- */}
                 {/* Gunakan grid-flow-dense agar celah kosong terisi otomatis */}
-                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] grid-flow-dense">
+                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] grid-flow-dense mt-20">
 
-                    {projects.map((project) => (
+                    {PROJECTS_DATA.map((project) => (
                         <Link
-                            href={`/project/${project.id}`}
+                            href={project.link}
                             key={project.id}
                             // Tambahkan class 'project-card' untuk target animasi GSAP
                             className={`project-card group relative rounded-xl border border-white/10 bg-white/5 overflow-hidden hover:border-[#008cff]/50 transition-all duration-500 ${project.span}`}
@@ -176,20 +262,18 @@ export default function ProjectsSection() {
 
                             {/* 1. IMAGE LAYER */}
                             <div className="absolute inset-0 w-full h-full">
-                                {/* Placeholder Background */}
+                                {/* Image Background */}
                                 <div className="relative w-full h-full bg-[#1a1a1a] group-hover:scale-105 transition-transform duration-700 ease-in-out">
 
-                                    {/* Jika nanti pakai Image Next.js: */}
-                                    {/* <Image 
-                     src={project.image || "/placeholder.jpg"} 
-                     alt={project.title} 
-                     fill 
-                     className="object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" 
-                   /> 
-                   */}
+                                    <Image 
+                                        src={project.photo || "/placeholder.jpg"} 
+                                        alt={project.title} 
+                                        fill 
+                                        className="object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" 
+                                    />
 
-                                    {/* Placeholder Text (Hapus jika sudah ada gambar) */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-6xl uppercase tracking-tighter opacity-100">
+                                    {/* Fallback Text (Shows behind image) */}
+                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-6xl uppercase tracking-tighter opacity-100 -z-10">
                                         {project.category.split(" ")[0]}
                                     </div>
                                 </div>
