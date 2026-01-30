@@ -251,7 +251,7 @@ export default function ProjectsSection() {
 
                 {/* --- BENTO GRID VAULT --- */}
                 {/* Gunakan grid-flow-dense agar celah kosong terisi otomatis */}
-                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] grid-flow-dense mt-20">
+                <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] mt-20">
 
                     {PROJECTS_DATA.map((project) => (
                         <Link
