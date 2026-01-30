@@ -99,7 +99,7 @@ export default function AboutSection() {
 
                         <h2 className="font-jakarta text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
                             Bridging the gap between <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
+                            <span className="inline-block pb-2 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                 Logic and Creativity.
                             </span>
                         </h2>

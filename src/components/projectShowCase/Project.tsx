@@ -101,7 +101,7 @@ export default function ProjectsSection() {
                         </span>
                         <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
                             Architecting <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">
+                            <span className="inline-block pb-2 bg-gradient-to-r from-white to-gray-500 bg-clip-text text-transparent [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]">
                                 Digital Reality.
                             </span>
                         </h2>
@@ -117,7 +117,7 @@ export default function ProjectsSection() {
                     <h3 className="text-center text-[#008cff] font-mono text-sm tracking-widest uppercase mb-6">
                         // Mega Project
                     </h3>
-                    
+
                     {/* ========== GRADIENT WRAPPER (Shimmer Border) ========== */}
                     {/* 
                       The wrapper creates the "border" effect:
@@ -126,27 +126,28 @@ export default function ProjectsSection() {
                       - animate-shimmer-sync = synchronized animation
                       The inner card blocks the center, leaving only the edge visible
                     */}
-                    <div 
-                        className="p-[2px] rounded-2xl bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync overflow-hidden"
+
+                    <div
+                        className="p-[2px] rounded-2xl bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(20,184,166,0.4)]"
                     >
                         {/* ========== INNER CARD (Dark Content Area) ========== */}
                         <Link
                             href={MEGA_PROJECT.link}
-                            className="project-card group relative block w-full h-[350px] md:h-[400px] rounded-2xl bg-[#0a0a0a] overflow-hidden transition-all duration-500 hover:shadow-[0_0_50px_rgba(20,184,166,0.2)]"
+                            className="project-card group relative block w-full h-[350px] md:h-[400px] rounded-2xl bg-[#0a0a0a] overflow-hidden transition-all duration-500"
                         >
                             {/* Status Badge */}
-                            <div className="absolute top-4 right-4 z-20">
-                                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full backdrop-blur-md ${
-                                    MEGA_PROJECT.status === 'ongoing' 
-                                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' 
+                            <div className="absolute top-4 right-4 z-20 hidden md:block">
+                                <span className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full backdrop-blur-md ${MEGA_PROJECT.status === 'ongoing'
+                                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
                                         : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                }`}>
+                                    }`}>
                                     {MEGA_PROJECT.status === 'ongoing' ? 'Ongoing' : 'Finished'}
                                 </span>
                             </div>
 
+
                             {/* Premium Glow Effect */}
-                            <div 
+                            <div
                                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                                 style={{
                                     background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.1) 0%, transparent 70%)'
@@ -156,11 +157,11 @@ export default function ProjectsSection() {
                             {/* Image Layer */}
                             <div className="absolute inset-0 w-full h-full">
                                 <div className="relative w-full h-full bg-[#0d0d0d] group-hover:scale-105 transition-transform duration-700 ease-in-out">
-                                    <Image 
-                                        src={MEGA_PROJECT.photo || "/placeholder.jpg"} 
-                                        alt={MEGA_PROJECT.title} 
-                                        fill 
-                                        className="object-cover opacity-40 grayscale group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-500" 
+                                    <Image
+                                        src={MEGA_PROJECT.photo || "/placeholder.jpg"}
+                                        alt={MEGA_PROJECT.title}
+                                        fill
+                                        className="object-cover opacity-40 grayscale group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-500"
                                     />
                                     {/* Fallback Text */}
                                     <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-7xl md:text-9xl uppercase tracking-tighter -z-10">
@@ -182,9 +183,9 @@ export default function ProjectsSection() {
                                 {/* Tech Pills */}
                                 <div className="flex flex-wrap gap-2 transform md:-translate-y-4 opacity-100 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-300">
                                     {MEGA_PROJECT.tech.map((t, i) => (
-                                        <span 
-                                            key={i} 
-                                            className="px-3 py-1 text-xs font-medium rounded-full backdrop-blur-md text-teal-400 bg-teal-500/15 border border-teal-500/30"
+                                        <span
+                                            key={i}
+                                            className="px-2 md:px-4 py-1 text-[10px] md:text-sm font-medium rounded-full backdrop-blur-md text-teal-400 bg-teal-500/15 border border-teal-500/30"
                                         >
                                             {t}
                                         </span>
@@ -198,20 +199,20 @@ export default function ProjectsSection() {
                                             <span className="text-xs font-mono uppercase tracking-wider mb-2 block opacity-80 text-teal-400">
                                                 {MEGA_PROJECT.category}
                                             </span>
-                                            
+
                                             {/* ========== SYNCHRONIZED SHIMMER TITLE ========== */}
                                             {/* 
                                               Same gradient & animation as the border wrapper.
                                               This creates the "laser scan" passing through effect.
                                             */}
-                                            <h3 
+                                            <h3
                                                 className="text-3xl md:text-5xl font-outfit font-bold tracking-tight mb-2 bg-clip-text text-transparent bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync"
                                             >
                                                 {MEGA_PROJECT.title}
                                             </h3>
-                                            
+
                                             {/* Description stays static/dark */}
-                                            <p className="text-white/60 text-sm md:text-base line-clamp-2 md:line-clamp-3 max-w-2xl">
+                                            <p className="text-white/60 text-xs md:text-sm line-clamp-2 md:line-clamp-3 max-w-2xl">
                                                 {MEGA_PROJECT.description}
                                             </p>
                                         </div>
@@ -223,7 +224,7 @@ export default function ProjectsSection() {
                                         */}
                                         <div className="flex-shrink-0">
                                             <div className="p-[2px] rounded-full bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync">
-                                                <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white cursor-pointer group-hover:rotate-45 transition-all duration-300">
+                                                <div className="w-8 h-8 md:w-14 md:h-14 rounded-full bg-[#0a0a0a] flex items-center justify-center text-white cursor-pointer group-hover:rotate-45 transition-all duration-300">
                                                     <svg
                                                         width="20"
                                                         height="20"
@@ -265,11 +266,11 @@ export default function ProjectsSection() {
                                 {/* Image Background */}
                                 <div className="relative w-full h-full bg-[#1a1a1a] group-hover:scale-105 transition-transform duration-700 ease-in-out">
 
-                                    <Image 
-                                        src={project.photo || "/placeholder.jpg"} 
-                                        alt={project.title} 
-                                        fill 
-                                        className="object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500" 
+                                    <Image
+                                        src={project.photo || "/placeholder.jpg"}
+                                        alt={project.title}
+                                        fill
+                                        className="object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500"
                                     />
 
                                     {/* Fallback Text (Shows behind image) */}
@@ -360,7 +361,7 @@ export default function ProjectsSection() {
                         }
                         className="btn-neon"
                     >
-                        View Entire Archive
+                        View Entire Archive on GitHub
                     </button>
 
                 </div>
