@@ -81,7 +81,7 @@ export default function ContactSection() {
           // Execute reCAPTCHA
           // Production: 6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh
           // Test: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
-          recaptchaToken = await window.grecaptcha.execute('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', { action: 'submit' });
+          recaptchaToken = await window.grecaptcha.execute('6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh', { action: 'submit' });
           console.log("✅ reCAPTCHA token generated:", recaptchaToken.substring(0, 20) + "...");
         } catch (error) {
           console.warn("⚠️ reCAPTCHA failed, continuing without it:", error);
