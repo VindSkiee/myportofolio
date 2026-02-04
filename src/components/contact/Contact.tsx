@@ -99,12 +99,12 @@ export default function ContactSection() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              recaptchaToken,
-              action: 'submit'
+              recaptchaToken: recaptchaToken,
             }),
           });
 
           const verifyData = await verifyResponse.json();
+          console.log("📦 Backend response:", verifyData);
 
           if (!verifyData.allowed) {
             console.error("❌ reCAPTCHA verification failed:", verifyData.reason);
@@ -350,7 +350,6 @@ export default function ContactSection() {
                     onChange={handleChange}
                     required
                     maxLength={100}
-                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     title="Please enter a valid email address"
                     disabled={isSubmitting}
                   />

@@ -92,8 +92,15 @@ export async function POST(request: NextRequest) {
     const body: RequestBody = await request.json();
     const { recaptchaToken, action } = body;
 
+    console.log('📥 Received request body:', { 
+      hasToken: !!recaptchaToken, 
+      tokenLength: recaptchaToken?.length,
+      action: action || 'not provided'
+    });
+
     // 4. TOKEN VALIDATION
     if (!recaptchaToken || typeof recaptchaToken !== 'string') {
+      console.error('❌ Invalid token:', recaptchaToken);
       return NextResponse.json(
         { allowed: false, reason: 'Missing or invalid recaptchaToken' },
         { status: 400 }
