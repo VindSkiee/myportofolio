@@ -129,12 +129,18 @@ export async function POST(request: NextRequest) {
     if (!data.success) {
       console.warn('⚠️ reCAPTCHA verification failed:', data['error-codes']);
       console.warn('Full Google response:', JSON.stringify(data, null, 2));
+      console.warn('Secret key used (first 15 chars):', RECAPTCHA_SECRET_KEY.substring(0, 15));
+      console.warn('Hostname from Google:', data.hostname);
       return NextResponse.json(
         { 
           allowed: false, 
           reason: 'reCAPTCHA verification failed',
           errors: data['error-codes'],
-          details: data
+          details: data,
+          debug: {
+            hostname: data.hostname,
+            secretKeyPrefix: RECAPTCHA_SECRET_KEY.substring(0, 10) + '...'
+          }
         },
         { status: 400 }
       );
