@@ -73,24 +73,71 @@ export default function ContactSection() {
       let recaptchaToken = "";
       if (typeof window !== "undefined" && window.grecaptcha) {
         try {
+          // Wait for reCAPTCHA to be ready
+          await new Promise<void>((resolve) => {
+            window.grecaptcha.ready(() => resolve());
+          });
+          
+          // Execute reCAPTCHA
+          // Production: 6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh
+          // Test: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
           recaptchaToken = await window.grecaptcha.execute('6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh', { action: 'submit' });
-          console.log("✅ reCAPTCHA token generated");
+          console.log("✅ reCAPTCHA token generated:", recaptchaToken.substring(0, 20) + "...");
         } catch (error) {
           console.warn("⚠️ reCAPTCHA failed, continuing without it:", error);
         }
+      } else {
+        console.warn("⚠️ reCAPTCHA not loaded yet");
+      }
+
+      // 4. VERIFY RECAPTCHA WITH BACKEND
+      if (recaptchaToken) {
+        try {
+          const verifyResponse = await fetch('/api/verify-recaptcha', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              recaptchaToken,
+              action: 'submit'
+            }),
+          });
+
+          const verifyData = await verifyResponse.json();
+
+          if (!verifyData.allowed) {
+            console.error("❌ reCAPTCHA verification failed:", verifyData.reason);
+            console.error("Error details:", verifyData.errors);
+            console.error("Full response:", verifyData);
+            setSubmitStatus("error");
+            setRateLimitError(verifyData.reason || "Security verification failed. Please try again.");
+            setIsSubmitting(false);
+            return;
+          }
+
+          console.log("✅ reCAPTCHA verified by backend | Score:", verifyData.score);
+        } catch (error) {
+          console.error("❌ Backend verification error:", error);
+          setSubmitStatus("error");
+          setRateLimitError("Security verification failed. Please try again.");
+          setIsSubmitting(false);
+          return;
+        }
+      } else {
+        console.warn("⚠️ No reCAPTCHA token, proceeding without verification (not recommended)");
       }
       
+      // 5. SEND EMAIL
       await emailjs.send(
-        "service_77ex519", // Ganti dengan Service ID dari EmailJS
-        "template_eveuy4h", // Ganti dengan Template ID dari EmailJS
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_77ex519",
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_eveuy4h",
         {
           name: formData.name,
           email: formData.email,
           message: formData.message,
-          recaptchaToken: recaptchaToken,
-          'g-recaptcha-response': recaptchaToken, // Alternative field name
         },
-        "F3KRRNWroKN2m4y0g" // Ganti dengan Public Key dari EmailJS
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "F3KRRNWroKN2m4y0g"
       );
 
       // Update rate limiting tracker
@@ -112,6 +159,23 @@ export default function ContactSection() {
       setIsSubmitting(false);
     }
   };
+
+  // Verify reCAPTCHA is loaded
+  useEffect(() => {
+    const checkRecaptcha = () => {
+      if (typeof window !== "undefined" && window.grecaptcha) {
+        window.grecaptcha.ready(() => {
+          console.log("✅ reCAPTCHA is ready and loaded successfully");
+        });
+      } else {
+        console.warn("⚠️ reCAPTCHA script not detected. Check if script is loaded in layout.tsx");
+      }
+    };
+
+    // Check after a short delay to ensure script has loaded
+    const timer = setTimeout(checkRecaptcha, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -312,10 +376,12 @@ export default function ContactSection() {
                 <button 
                   type="submit"
                   style={{ "--i": 1 } as React.CSSProperties} 
-                  className="stack-btn uppercase tracking-wider"
+                  className="stack-btn uppercase tracking-wider min-w-[200px] transition-all duration-300"
                   disabled={isSubmitting || !!rateLimitError}
                 >
-                  {isSubmitting ? "Sending..." : submitStatus === "success" ? "Message Sent!" : submitStatus === "error" ? "Failed. Try Again" : "Send Message"}
+                  <span className="inline-block">
+                    {isSubmitting ? "Sending..." : submitStatus === "success" ? "Message Sent!" : submitStatus === "error" ? "Failed. Try Again" : "Send Message"}
+                  </span>
                 </button>
               </ul>
 

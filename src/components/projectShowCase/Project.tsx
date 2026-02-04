@@ -1,11 +1,11 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Link from "next/link";
-import Image from "next/image";
 import "../navbar/navButton.css";
 import { PROJECTS_DATA, MEGA_PROJECT } from "@/constants/projects";
+import type { ModalProjectData } from "@/constants/projects";
+import ProjectModal from "./ProjectModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,6 +14,23 @@ export default function ProjectsSection() {
     const titleRef = useRef<HTMLDivElement>(null);
     const megaRef = useRef<HTMLDivElement>(null);
     const gridRef = useRef<HTMLDivElement>(null);
+
+    // Modal State
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProject, setSelectedProject] = useState<ModalProjectData | null>(null);
+
+    // Open Modal Handler
+    const openModal = (project: ModalProjectData) => {
+        setSelectedProject(project);
+        setIsModalOpen(true);
+    };
+
+    // Close Modal Handler
+    const closeModal = () => {
+        setIsModalOpen(false);
+        // Delay clearing the project to allow exit animation
+        setTimeout(() => setSelectedProject(null), 300);
+    };
 
     useEffect(() => {
         const section = sectionRef.current;
@@ -131,9 +148,12 @@ export default function ProjectsSection() {
                         className="p-[2px] rounded-2xl bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(20,184,166,0.4)]"
                     >
                         {/* ========== INNER CARD (Dark Content Area) ========== */}
-                        <Link
-                            href={MEGA_PROJECT.link}
-                            className="project-card group relative block w-full h-[350px] md:h-[400px] rounded-2xl bg-[#0a0a0a] overflow-hidden transition-all duration-500"
+                        <div
+                            onClick={() => openModal(MEGA_PROJECT)}
+                            className="project-card group relative block w-full h-[350px] md:h-[400px] rounded-2xl bg-[#0a0a0a] overflow-hidden transition-all duration-500 cursor-pointer"
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => e.key === 'Enter' && openModal(MEGA_PROJECT)}
                         >
                             {/* Status Badge */}
                             <div className="absolute top-4 right-4 z-20 hidden md:block">
@@ -154,17 +174,11 @@ export default function ProjectsSection() {
                                 }}
                             />
 
-                            {/* Image Layer */}
+                            {/* Background Layer */}
                             <div className="absolute inset-0 w-full h-full">
                                 <div className="relative w-full h-full bg-[#0d0d0d] group-hover:scale-105 transition-transform duration-700 ease-in-out">
-                                    <Image
-                                        src={MEGA_PROJECT.photo || "/placeholder.jpg"}
-                                        alt={MEGA_PROJECT.title}
-                                        fill
-                                        className="object-cover opacity-40 grayscale group-hover:opacity-70 group-hover:grayscale-0 transition-all duration-500"
-                                    />
                                     {/* Fallback Text */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-7xl md:text-9xl uppercase tracking-tighter -z-10">
+                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-7xl md:text-9xl uppercase tracking-tighter">
                                         MEGA
                                     </div>
                                 </div>
@@ -245,7 +259,7 @@ export default function ProjectsSection() {
                                     </div>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     </div>
                 </div>
 
@@ -254,27 +268,22 @@ export default function ProjectsSection() {
                 <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] mt-20">
 
                     {PROJECTS_DATA.map((project) => (
-                        <Link
-                            href={project.link}
+                        <div
                             key={project.id}
+                            onClick={() => openModal(project)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => e.key === 'Enter' && openModal(project)}
                             // Tambahkan class 'project-card' untuk target animasi GSAP
-                            className={`project-card group relative rounded-xl border border-white/10 bg-white/5 overflow-hidden hover:border-[#008cff]/50 transition-all duration-500 ${project.span}`}
+                            className={`project-card group relative rounded-xl border border-white/10 bg-white/5 overflow-hidden hover:border-[#008cff]/50 transition-all duration-500 cursor-pointer ${project.span}`}
                         >
 
-                            {/* 1. IMAGE LAYER */}
+                            {/* 1. BACKGROUND LAYER */}
                             <div className="absolute inset-0 w-full h-full">
-                                {/* Image Background */}
+                                {/* Background */}
                                 <div className="relative w-full h-full bg-[#1a1a1a] group-hover:scale-105 transition-transform duration-700 ease-in-out">
-
-                                    <Image
-                                        src={project.photo || "/placeholder.jpg"}
-                                        alt={project.title}
-                                        fill
-                                        className="object-cover opacity-60 grayscale group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-500"
-                                    />
-
-                                    {/* Fallback Text (Shows behind image) */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-6xl uppercase tracking-tighter opacity-100 -z-10">
+                                    {/* Fallback Text (Shows behind) */}
+                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-6xl uppercase tracking-tighter">
                                         {project.category.split(" ")[0]}
                                     </div>
                                 </div>
@@ -347,7 +356,7 @@ export default function ProjectsSection() {
                                 </div>
                             </div>
 
-                        </Link>
+                        </div>
                     ))}
 
                 </div>
@@ -367,6 +376,13 @@ export default function ProjectsSection() {
                 </div>
 
             </div>
+
+            {/* Project Modal */}
+            <ProjectModal
+                project={selectedProject}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+            />
         </section>
     );
 }
