@@ -166,11 +166,25 @@ git push origin main
 2. Lakukan redeploy setelah set env vars
 3. Check Vercel logs: `vercel logs`
 
-### ❌ Error: "Email sending failed"
+### ❌ Error: "Email sending failed" atau "ERR_CONNECTION_RESET"
 **Solusi:**
-1. Check EmailJS credentials di environment variables
-2. Pastikan EmailJS service masih active
-3. Check browser console untuk detail error
+1. Check EmailJS credentials di environment variables:
+   - `NEXT_PUBLIC_EMAILJS_SERVICE_ID`
+   - `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID`
+   - `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY`
+2. Pastikan EmailJS service masih active di: https://dashboard.emailjs.com/
+3. Check EmailJS account quota (free tier: 200 emails/month)
+4. Verify template ID exists dan sudah di-save
+5. Test EmailJS dari dashboard terlebih dahulu
+6. Check browser console untuk detail error
+7. Retry mechanism akan otomatis mencoba 2x jika gagal
+
+### ❌ Error: "Failed to fetch"
+**Solusi:**
+1. Network connectivity issue - check internet connection
+2. Firewall atau ad blocker blocking EmailJS
+3. Try dari browser/network yang berbeda
+4. EmailJS API mungkin down - check status: https://status.emailjs.com/
 
 ### ❌ Error: "Invalid site key"
 **Solusi:**

@@ -128,17 +128,43 @@ export default function ContactSection() {
         console.warn("⚠️ No reCAPTCHA token, proceeding without verification (not recommended)");
       }
       
-      // 5. SEND EMAIL
-      await emailjs.send(
-        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_77ex519",
-        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_eveuy4h",
-        {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-        },
-        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "F3KRRNWroKN2m4y0g"
-      );
+      // 5. SEND EMAIL WITH RETRY MECHANISM
+      const sendEmailWithRetry = async (maxRetries = 2) => {
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
+          try {
+            console.log(`📧 Sending email (attempt ${attempt}/${maxRetries})...`);
+            
+            await emailjs.send(
+              process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_77ex519",
+              process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_eveuy4h",
+              {
+                name: formData.name,
+                email: formData.email,
+                message: formData.message,
+              },
+              process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "F3KRRNWroKN2m4y0g"
+            );
+            
+            console.log("✅ Email sent successfully!");
+            return true;
+          } catch (error: any) {
+            console.warn(`⚠️ Email attempt ${attempt} failed:`, error.message);
+            
+            // If last attempt, throw error
+            if (attempt === maxRetries) {
+              throw error;
+            }
+            
+            // Wait before retry (exponential backoff)
+            const delay = attempt * 1000;
+            console.log(`⏳ Retrying in ${delay}ms...`);
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        }
+        return false;
+      };
+
+      await sendEmailWithRetry();
 
       // Update rate limiting tracker
       recentSubmissions.push(now);
@@ -149,8 +175,21 @@ export default function ContactSection() {
       
       // Reset status setelah 5 detik
       setTimeout(() => setSubmitStatus("idle"), 5000);
-    } catch (error) {
-      console.error("Email sending failed:", error);
+    } catch (error: any) {
+      console.error("❌ Email sending failed after all retries:", error);
+      
+      // Provide user-friendly error messages
+      let errorMessage = "Failed to send message. Please try again.";
+      
+      if (error.message?.includes("Failed to fetch") || error.message?.includes("ERR_CONNECTION")) {
+        errorMessage = "Network error. Please check your connection and try again.";
+      } else if (error.status === 400) {
+        errorMessage = "Invalid email configuration. Please contact support.";
+      } else if (error.status === 429) {
+        errorMessage = "Too many requests. Please try again in a few minutes.";
+      }
+      
+      setRateLimitError(errorMessage);
       setSubmitStatus("error");
       
       // Reset status setelah 5 detik
