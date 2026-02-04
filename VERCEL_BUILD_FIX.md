@@ -8,6 +8,21 @@ EEXIST: file already exists, symlink 'send-email.func' -> '/vercel/output/functi
 
 ---
 
+## ✅ Solusi Yang Sudah Diterapkan
+
+✅ **API route di-rename untuk menghindari konflik:**
+- `src/app/api/send-email/` → `src/app/api/contact/`
+- Endpoint sekarang: `/api/contact`
+- `vercel.json` disederhanakan
+
+✅ **Changes sudah di-push ke Git:**
+```bash
+git commit -m "fix: rename send-email to contact API to resolve Vercel symlink conflict"
+git push origin main
+```
+
+---
+
 ## 🔍 Penyebab
 
 Error ini terjadi karena:
