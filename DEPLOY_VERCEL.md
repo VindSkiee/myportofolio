@@ -65,9 +65,15 @@ vercel --prod
 | Variable Name | Value | Environment |
 |---------------|-------|-------------|
 | `RECAPTCHA_SECRET_KEY` | `6Lflt1gsAAAAAKq1ib_a7Ubl1FrD8dWrC_jE6seR` | ✅ Production, ✅ Preview, ✅ Development |
-| `NEXT_PUBLIC_EMAILJS_SERVICE_ID` | `service_77ex519` | ✅ Production, ✅ Preview, ✅ Development |
-| `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` | `template_eveuy4h` | ✅ Production, ✅ Preview, ✅ Development |
+| `EMAILJS_SERVICE_ID` | `service_77ex519` | ✅ Production, ✅ Preview, ✅ Development |
+| `EMAILJS_TEMPLATE_ID` | `template_eveuy4h` | ✅ Production, ✅ Preview, ✅ Development |
+| `EMAILJS_PRIVATE_KEY` | *Get from EmailJS Dashboard* | ✅ Production, ✅ Preview, ✅ Development |
 | `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` | `F3KRRNWroKN2m4y0g` | ✅ Production, ✅ Preview, ✅ Development |
+
+> **⚠️ IMPORTANT:** `EMAILJS_PRIVATE_KEY` harus diambil dari EmailJS Dashboard:
+> 1. Login ke https://dashboard.emailjs.com/
+> 2. Klik **Account** → **API Keys**
+> 3. Copy **Private Key**
 
 5. Klik **Save** setiap kali menambahkan variable
 

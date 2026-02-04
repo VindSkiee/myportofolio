@@ -128,43 +128,29 @@ export default function ContactSection() {
         console.warn("⚠️ No reCAPTCHA token, proceeding without verification (not recommended)");
       }
       
-      // 5. SEND EMAIL WITH RETRY MECHANISM
-      const sendEmailWithRetry = async (maxRetries = 2) => {
-        for (let attempt = 1; attempt <= maxRetries; attempt++) {
-          try {
-            console.log(`📧 Sending email (attempt ${attempt}/${maxRetries})...`);
-            
-            await emailjs.send(
-              process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID || "service_77ex519",
-              process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID || "template_eveuy4h",
-              {
-                name: formData.name,
-                email: formData.email,
-                message: formData.message,
-              },
-              process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY || "F3KRRNWroKN2m4y0g"
-            );
-            
-            console.log("✅ Email sent successfully!");
-            return true;
-          } catch (error: any) {
-            console.warn(`⚠️ Email attempt ${attempt} failed:`, error.message);
-            
-            // If last attempt, throw error
-            if (attempt === maxRetries) {
-              throw error;
-            }
-            
-            // Wait before retry (exponential backoff)
-            const delay = attempt * 1000;
-            console.log(`⏳ Retrying in ${delay}ms...`);
-            await new Promise(resolve => setTimeout(resolve, delay));
-          }
-        }
-        return false;
-      };
+      // 5. SEND EMAIL VIA SERVER-SIDE API (More reliable than client-side)
+      console.log('📧 Sending email via server API...');
+      
+      const emailResponse = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
 
-      await sendEmailWithRetry();
+      const emailData = await emailResponse.json();
+
+      if (!emailData.success) {
+        console.error('❌ Server-side email error:', emailData.error);
+        throw new Error(emailData.error || 'Failed to send email');
+      }
+
+      console.log('✅ Email sent successfully via server!');
 
       // Update rate limiting tracker
       recentSubmissions.push(now);
