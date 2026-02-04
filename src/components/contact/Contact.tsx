@@ -131,7 +131,7 @@ export default function ContactSection() {
       // 5. SEND EMAIL VIA SERVER-SIDE API (More reliable than client-side)
       console.log('📧 Sending email via server API...');
       
-      const emailResponse = await fetch('/api/send-email', {
+      const emailResponse = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
