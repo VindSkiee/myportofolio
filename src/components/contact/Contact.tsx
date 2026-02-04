@@ -81,7 +81,7 @@ export default function ContactSection() {
           // Execute reCAPTCHA
           // Production: 6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh
           // Test: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
-          recaptchaToken = await window.grecaptcha.execute('6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh', { action: 'submit' });
+          recaptchaToken = await window.grecaptcha.execute('6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', { action: 'submit' });
           console.log("✅ reCAPTCHA token generated:", recaptchaToken.substring(0, 20) + "...");
         } catch (error) {
           console.warn("⚠️ reCAPTCHA failed, continuing without it:", error);
@@ -100,6 +100,7 @@ export default function ContactSection() {
             },
             body: JSON.stringify({
               recaptchaToken: recaptchaToken,
+              action: 'submit', // Send action for validation
             }),
           });
 
@@ -147,6 +148,13 @@ export default function ContactSection() {
 
       if (!emailData.success) {
         console.error('❌ Server-side email error:', emailData.error);
+        console.error('   Details:', emailData.details);
+        
+        // Check if error is retryable
+        if (emailData.retryable) {
+          throw new Error(emailData.error + ' (retryable)');
+        }
+        
         throw new Error(emailData.error || 'Failed to send email');
       }
 
@@ -162,17 +170,23 @@ export default function ContactSection() {
       // Reset status setelah 5 detik
       setTimeout(() => setSubmitStatus("idle"), 5000);
     } catch (error: any) {
-      console.error("❌ Email sending failed after all retries:", error);
+      console.error("❌ Email sending failed:", error);
       
       // Provide user-friendly error messages
       let errorMessage = "Failed to send message. Please try again.";
       
-      if (error.message?.includes("Failed to fetch") || error.message?.includes("ERR_CONNECTION")) {
+      if (error.message?.includes("Failed to fetch") || error.message?.includes("network") || error.message?.includes("connection")) {
         errorMessage = "Network error. Please check your connection and try again.";
+      } else if (error.message?.includes("retryable") || error.message?.includes("interrupted") || error.message?.includes("timed out")) {
+        errorMessage = "Connection interrupted. Please try again in a moment.";
+      } else if (error.message?.includes("DNS") || error.message?.includes("reach")) {
+        errorMessage = "Cannot reach email service. Please check your internet connection.";
       } else if (error.status === 400) {
         errorMessage = "Invalid email configuration. Please contact support.";
       } else if (error.status === 429) {
         errorMessage = "Too many requests. Please try again in a few minutes.";
+      } else if (error.status === 503) {
+        errorMessage = "Email service temporarily unavailable. Please try again shortly.";
       }
       
       setRateLimitError(errorMessage);
@@ -334,9 +348,22 @@ export default function ContactSection() {
               )}
 
               {/* HONEYPOT FIELD - Hidden from users, visible to bots */}
-              <div className="absolute left-[-9999px] opacity-0 pointer-events-none" aria-hidden="true">
+              <div 
+                style={{
+                  position: 'absolute',
+                  left: '-9999px',
+                  width: '1px',
+                  height: '1px',
+                  overflow: 'hidden',
+                  opacity: 0,
+                  pointerEvents: 'none',
+                }} 
+                aria-hidden="true"
+              >
+                <label htmlFor="honeypot_field">Leave this field empty</label>
                 <input
                   type="text"
+                  id="honeypot_field"
                   name="honeypot"
                   tabIndex={-1}
                   autoComplete="off"
