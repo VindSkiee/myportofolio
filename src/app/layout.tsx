@@ -3,6 +3,7 @@ import { JetBrains_Mono, Baloo_2, Plus_Jakarta_Sans, Outfit } from "next/font/go
 import Script from "next/script";
 import "./globals.css";
 import ScrollManager from "@/components/scroll/ScrollManager";
+import { LegalProvider } from "@/components/legal/LegalProvider";
 
 // Font configurations
 const jetbrainsMono = JetBrains_Mono({
@@ -56,13 +57,15 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <div className="scroll-container">
-          
-          <ScrollManager /> {/* Komponen logic ditaruh di dalam */}
-          
-          {children} {/* Halaman website render disini */}
-          
-        </div>
+        <LegalProvider>
+          <div className="scroll-container">
+            
+            <ScrollManager /> {/* Komponen logic ditaruh di dalam */}
+            
+            {children} {/* Halaman website render disini */}
+            
+          </div>
+        </LegalProvider>
       </body>
     </html>
   );

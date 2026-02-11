@@ -62,6 +62,7 @@ export default function Footer() {
             <ul className="space-y-4">
               {[
                 { label: "About", href: "#about" },
+                { label: "Services", href: "#services" },
                 { label: "Skills", href: "#skill" },
                 { label: "Project", href: "#project" },
                 { label: "Contact", href: "#contact" }
@@ -114,8 +115,27 @@ export default function Footer() {
 
         {/* BOTTOM BAR: COPYRIGHT & SCROLL UP */}
         <div className="flex flex-col md:flex-row justify-between items-center border-t border-white/10 py-8 gap-6">
-          <div className="text-white/30 text-sm">
-            &copy; {new Date().getFullYear()} Vind's. All rights reserved.
+          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+            <div className="text-white/30 text-sm">
+              &copy; {new Date().getFullYear()} Vind's. All rights reserved.
+            </div>
+            
+            {/* Legal Links */}
+            <div className="flex items-center gap-4 text-sm">
+              <Link
+                href="/terms"
+                className="text-white/40 hover:text-[#008cff] transition-colors"
+              >
+                Terms & Conditions
+              </Link>
+              <span className="text-white/20">|</span>
+              <Link
+                href="/terms#4"
+                className="text-white/40 hover:text-[#008cff] transition-colors"
+              >
+                Refund Policy
+              </Link>
+            </div>
           </div>
 
           {/* Tombol Back to Top yang Unik */}

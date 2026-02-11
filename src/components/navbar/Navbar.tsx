@@ -29,6 +29,9 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
                 <Link href="#about" className="hover:text-white transition-colors duration-300">
                     About
                 </Link>
+                <Link href="#services" className="hover:text-white transition-colors duration-300">
+                    Services
+                </Link>
                 <Link href="#skill" className="hover:text-white transition-colors duration-300">
                     Skill
                 </Link>
