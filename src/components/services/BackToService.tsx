@@ -1,17 +1,7 @@
-"use client"
-
-import { useRouter } from "next/navigation"
-
 export default function BackToServices() {
-  const router = useRouter()
-
-  const handleBack = () => {
-    router.push("/?scroll=services")
-  }
-
   return (
-    <button
-      onClick={handleBack}
+    <a
+      href="/#services"
       className="inline-flex items-center gap-2 text-white/50 hover:text-[#008cff] transition-colors mb-8"
     >
       <svg
@@ -28,6 +18,6 @@ export default function BackToServices() {
         />
       </svg>
       Back to Services
-    </button>
-  )
+    </a>
+  );
 }
