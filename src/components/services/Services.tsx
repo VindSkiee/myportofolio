@@ -5,6 +5,7 @@ import Link from "next/link";
 const services = [
   {
     id: 1,
+    slug: "backend-development",
     title: "Backend Development",
     description:
       "Scalable and secure server-side solutions using Node.js, Express, Laravel, and PostgreSQL. Includes API design, database optimization, and cloud deployment.",
@@ -35,6 +36,7 @@ const services = [
   },
   {
     id: 2,
+    slug: "web-application",
     title: "Web Application",
     description:
       "Full-stack web applications built with modern frameworks like Next.js and React. From landing pages to complex enterprise dashboards.",
@@ -65,6 +67,7 @@ const services = [
   },
   {
     id: 3,
+    slug: "api-integration",
     title: "API Integration",
     description:
       "Seamless integration of third-party services including payment gateways (Midtrans, Stripe), shipping APIs, and enterprise systems.",
@@ -96,11 +99,6 @@ const services = [
 ];
 
 export default function ServicesSection() {
-  const whatsappNumber = "6281317099362"; // Replace with your actual WhatsApp number
-  const whatsappMessage = encodeURIComponent(
-    "Halo, saya tertarik untuk konsultasi mengenai jasa development. Boleh dibantu?"
-  );
-
   return (
     <section
       id="services"
@@ -196,14 +194,12 @@ export default function ServicesSection() {
               </div>
 
               {/* CTA Button */}
-              <a
-                href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={`/services/${service.slug}`}
                 className="w-full py-3 px-6 rounded-xl bg-[#008cff]/10 border border-[#008cff]/30 text-[#008cff] font-medium text-center hover:bg-[#008cff] hover:text-white transition-all duration-300 group-hover:border-[#008cff]"
               >
-                Book Consultation
-              </a>
+                View Details
+              </Link>
             </div>
           ))}
         </div>
