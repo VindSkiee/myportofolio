@@ -1,7 +1,5 @@
 "use client";
 
-import { Suspense } from "react";
-
 import AboutSection from "@/components/about/About";
 import ContactSection from "@/components/contact/Contact";
 import Footer from "@/components/footer/Footer";
@@ -14,9 +12,7 @@ import ScrollHandler from "@/components/scroll/ScrollHandler";
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <Suspense fallback={null}>
-        <ScrollHandler />
-      </Suspense>
+      <ScrollHandler />
       <HeroSection />
       <AboutSection />
       <ServicesSection />

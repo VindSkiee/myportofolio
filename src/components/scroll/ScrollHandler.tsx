@@ -1,18 +1,24 @@
 "use client";
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 
 export default function ScrollHandler() {
-  const searchParams = useSearchParams();
-
   useEffect(() => {
-    const scrollTarget = searchParams.get("scroll");
-
-    if (scrollTarget) {
-      const el = document.getElementById(scrollTarget);
-      el?.scrollIntoView({ behavior: "smooth" });
+    // Check for hash in URL on mount
+    const hash = window.location.hash;
+    
+    if (hash) {
+      // Remove the # from hash
+      const id = hash.replace("#", "");
+      
+      // Wait a bit for DOM to be ready
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
     }
-  }, [searchParams]);
+  }, []);
 
   return null;
 }

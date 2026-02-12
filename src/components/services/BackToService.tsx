@@ -1,8 +1,18 @@
+"use client";
+
 export default function BackToServices() {
+  const handleBack = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    
+    // Use window.location for reliable navigation with hash
+    window.location.href = "/#services";
+  };
+
   return (
     <a
       href="/#services"
-      className="inline-flex items-center gap-2 text-white/50 hover:text-[#008cff] transition-colors mb-8"
+      onClick={handleBack}
+      className="inline-flex items-center gap-2 text-white/50 hover:text-[#008cff] transition-colors mb-8 cursor-pointer"
     >
       <svg
         className="w-4 h-4"
