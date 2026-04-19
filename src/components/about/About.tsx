@@ -113,13 +113,13 @@ export default function AboutSection() {
                             </p>
 
                             <p>
-                                That's why I'm expanding into Frontend to ensure the systems I build aren't just powerful,
+                                That&apos;s why I&apos;m expanding into Frontend to ensure the systems I build aren&apos;t just powerful,
                                 but also beautiful and usable.
                             </p>
 
                             <p>
                                 Beyond code, I live by the philosophy of
-                                <span className="text-white font-medium"> "Balanced Excellence"</span>.
+                                <span className="text-white font-medium"> &quot;Balanced Excellence&quot;</span>.
                                 Consistent weight training keeps my discipline sharp, reinforcing the mindset that growth comes from progressive overload.
                             </p>
                         </div>

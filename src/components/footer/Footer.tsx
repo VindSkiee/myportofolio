@@ -43,13 +43,13 @@ export default function Footer() {
           {/* COLUMN 1: BRAND & MISSION */}
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold text-white mb-6 tracking-tight">
-              Vind's<span className="text-[#008cff]">.</span>
+              Vind&apos;s<span className="text-[#008cff]">.</span>
             </h3>
             <p className="text-white/50 max-w-sm text-lg leading-relaxed">
               Crafting robust backend systems with a focus on scalability, security, and clean architecture.
               <br /><br />
               <span className="text-white/30 text-sm">
-                "Balanced Excellence" — Code & Iron.
+                &quot;Balanced Excellence&quot; - Code &amp; Iron.
               </span>
             </p>
           </div>
@@ -57,7 +57,7 @@ export default function Footer() {
           {/* COLUMN 2: NAVIGATION */}
           <div>
             <h4 className="font-mono text-sm text-[#008cff] uppercase tracking-widest mb-6">
-              // Navigation
+              {'// Navigation'}
             </h4>
             <ul className="space-y-4">
               {[
@@ -82,7 +82,7 @@ export default function Footer() {
           {/* COLUMN 3: SYSTEM STATUS (The Creative Part) */}
           <div>
             <h4 className="font-mono text-sm text-[#008cff] uppercase tracking-widest mb-6">
-              // System Status
+              {'// System Status'}
             </h4>
             
             <div className="space-y-4 font-mono text-sm text-white/60">
@@ -115,7 +115,7 @@ export default function Footer() {
         {/* BOTTOM BAR: COPYRIGHT & SCROLL UP */}
         <div className="flex flex-col md:flex-row justify-between items-center border-t border-white/10 py-8 gap-6">
           <div className="text-white/30 text-sm">
-            &copy; {new Date().getFullYear()} Vind's. All rights reserved.
+            &copy; {new Date().getFullYear()} Vind&apos;s. All rights reserved.
           </div>
 
           {/* Tombol Back to Top yang Unik */}
@@ -150,7 +150,7 @@ export default function Footer() {
               <span className="w-2 h-2 bg-black rounded-full" />
               <span>Open for Collaboration</span>
               <span className="w-2 h-2 bg-black rounded-full" />
-              <span>Let's Build Scale</span>
+              <span>Let&apos;s Build Scale</span>
               <span className="w-2 h-2 bg-black rounded-full" />
             </div>
           ))}

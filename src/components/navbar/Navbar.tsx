@@ -21,7 +21,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
         >
             {/* Logo */}
             <div className="font-jakarta font-bold text-xl text-white tracking-tighter cursor-pointer">
-                Vind's
+                Vind&apos;s
             </div>
 
             {/* Menu Links */}
@@ -47,7 +47,7 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
                 rel="noopener noreferrer"
                 className="btn-neon inline-block"
             >
-                Let's Talk
+                Let&apos;s Talk
             </a>
 
 

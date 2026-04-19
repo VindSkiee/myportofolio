@@ -34,7 +34,7 @@ export default function SkillsSection() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <span className="text-[#008cff] font-mono text-sm tracking-widest uppercase mb-2 block">
-            // Tech Stack
+            {'// Tech Stack'}
           </span>
           <h2 className="font-jakarta text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
             Technical <br className="md:hidden" />

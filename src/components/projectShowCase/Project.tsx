@@ -114,7 +114,7 @@ export default function ProjectsSection() {
                 <div ref={titleRef} className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 text-center md:text-left">
                     <div>
                         <span className="text-[#008cff] font-mono text-sm tracking-widest uppercase mb-2 block">
-              // Selected Works
+                            {'// Selected Works'}
                         </span>
                         <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
                             Architecting <br />
@@ -124,7 +124,7 @@ export default function ProjectsSection() {
                         </h2>
                     </div>
                     <p className="text-white/50 max-w-sm mt-6 md:mt-0 text-sm text-center md:text-right">
-                        A showcase of systems I've engineered. <br />
+                        A showcase of systems I&apos;ve engineered. <br />
                         Hover to compile the visual data.
                     </p>
                 </div>
@@ -132,7 +132,7 @@ export default function ProjectsSection() {
                 {/* --- MEGA PROJECT SPOTLIGHT --- */}
                 <div ref={megaRef} className="mb-12">
                     <h3 className="text-center text-[#008cff] font-mono text-sm tracking-widest uppercase mb-6">
-                        // Mega Project
+                        {'// Mega Project'}
                     </h3>
 
                     {/* ========== GRADIENT WRAPPER (Shimmer Border) ========== */}

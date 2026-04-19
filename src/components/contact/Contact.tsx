@@ -291,10 +291,10 @@ export default function ContactSection() {
           {/* --- LEFT SIDE: HEADLINE & SOCIAL DOCK (KODE KAMU) --- */}
           <div ref={leftSideRef} className="opacity-0 text-center md:text-left">
             <span className="text-[#008cff] font-mono text-sm tracking-widest uppercase mb-4 block">
-              // Get In Touch
+              {'// Get In Touch'}
             </span>
             <h2 className="font-jakarta text-3xl md:text-5xl font-bold text-white mb-6 leading-tight">
-              Let's build something <br />
+              Let&apos;s build something <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#008cff] to-[#00c6ff]">
                 legendary together.
               </span>
@@ -302,7 +302,7 @@ export default function ContactSection() {
             
             <p className="font-jakarta text-white/60 text-sm md:text-base mb-12 max-w-md mx-auto md:mx-0">
               Have a project in mind or just want to discuss backend architecture? 
-              I'm always open to new opportunities and connections.
+              I&apos;m always open to new opportunities and connections.
             </p>
 
             {/* --- YOUR SOCIAL DOCK IMPLEMENTATION --- */}
