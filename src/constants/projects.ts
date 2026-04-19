@@ -54,7 +54,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
         span: "md:col-span-2",
         isUnderDevelopment: false,
         images: ["/projects/truck_1.jpg", "/projects/truck_2.jpg"],
-        repoUrl: "https://github.com/VindSkiee/truck-monitoring",
+        repoUrl: "https://github.com/VindSkiee/truck_arrival_monitoring_system",
     },
     {
         id: 2,
@@ -79,7 +79,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
         span: "md:col-span-3",
         isUnderDevelopment: false,
         images: ["/projects/attendance_1.png", "/projects/attendance_2.png"],
-        repoUrl: "https://github.com/VindSkiee/attendance-system",
+        repoUrl: "https://github.com/VindSkiee/attendance_scheduler_system",
     },
     {
         id: 4,
