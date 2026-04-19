@@ -53,7 +53,7 @@ Key technical achievements include sub-100ms message latency, support for 10,000
 The application features role-based access control allowing different permission levels for drivers, dispatchers, and administrators. The packaging module enables efficient cargo management with barcode scanning integration and automated weight/dimension logging.
 
 Built with Laravel's robust MVC architecture, the system handles high-volume data processing with optimized MySQL queries. The dashboard displays live statistics including active deliveries, fuel consumption metrics, and driver performance analytics. Integration with GPS devices provides accurate location updates every 30 seconds.`,
-        client: "PT. Logistik Nusantara",
+        client: "PT. Papertech Indonesia",
         techStack: ["Laravel", "MySQL", "Livewire", "Alpine.js", "Tailwind CSS"],
         photos: [
             "/projects/truck/hero.jpg",
@@ -78,14 +78,14 @@ The page features smooth scroll animations, an interactive course carousel, and 
 
 Performance optimization techniques including lazy loading, image optimization, and code splitting result in a Lighthouse score above 95. The contact form integrates with their CRM system for automated lead management.`,
         client: "Brilliant Indonesia Education",
-        techStack: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
+        techStack: ["React", "Tailwind CSS", "Vite"],
         photos: [
             "/projects/brilliant_1.png",
             "/projects/brilliant_2.png",
             "/projects/brilliant/testimonials.jpg",
             "/projects/brilliant/mobile.jpg",
         ],
-        year: "2024",
+        year: "2026",
         role: "Frontend Developer",
         liveUrl: "https://brilliant-indonesia.co.id",
     },
@@ -109,9 +109,31 @@ The RBAC implementation uses Laravel's policy system with a custom middleware fo
             "/projects/attendance/dashboard.jpg",
             "/projects/attendance/reports.jpg",
         ],
-        year: "2024",
+        year: "2025",
         role: "Full-Stack Developer",
         repoUrl: "https://github.com/VindSkiee/attendance-system",
+    },
+    // --- STANDARD PROJECT (Blue Theme) ---
+    {
+        id: "community-finance",
+        slug: "community-finance",
+        isMega: false,
+        title: "Community Finance and Event Organizer System",
+        type: "RBAC + CRUD System + payment gateway",
+        description: `A comprehensive financial management system for community organizations, featuring role-based access control and seamless payment integration. The system supports multiple organizational hierarchies with configurable permission levels for administrators, finance officers, and members.
+
+Core features include automated invoicing, expense tracking, and event funding. The payment gateway integration ensures secure transactions and compliance with financial regulations.
+
+The RBAC implementation uses Laravel's policy system with a custom middleware for fine-grained permission checks. The UI is built with React and Tailwind CSS. Integration with existing accounting systems is supported through a RESTful API.`,
+        client: null,
+        techStack: ["Next.js", "MySQL", "Midtrans", "React", "Tailwind CSS"],
+        photos: [
+            "/projects/event_1.png",
+            "/projects/event_2.png",
+        ],
+        year: "2026",
+        role: "Full-Stack Developer",
+        repoUrl: "https://github.com/VindSkiee/event_organizer_system",
     },
 ];
 

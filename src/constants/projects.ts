@@ -83,6 +83,18 @@ export const PROJECTS_DATA: ProjectItem[] = [
         liveUrl: "https://attendance.example.com",
         repoUrl: "https://github.com/VindSkiee/attendance-system",
     },
+    {
+        id: 4,
+        title: "Community Finance and Event Organizer System",
+        category: "RBAC + CRUD + Payment Gateway",
+        description: "Finance workflow + event funding with role-based permissions and Midtrans integration.",
+        fullDescription: "A comprehensive financial management and event organizer system for community organizations. It supports configurable RBAC roles for administrators, finance officers, and members, complete with invoicing, expense tracking, and event funding workflows. Midtrans integration enables secure payment processing and reliable transaction handling.",
+        tech: ["Next.js", "React", "MySQL", "Midtrans", "Tailwind CSS"],
+        span: "md:col-span-3",
+        isUnderDevelopment: false,
+        images: ["/projects/event_1.png", "/projects/event_2.png"],
+        repoUrl: "https://github.com/VindSkiee/event_organizer_system",
+    },
 ];
 
 // Type for modal data (lightweight version)

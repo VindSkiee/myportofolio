@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   description: "Full-Stack Developer Portfolio",
 };
 
+const recaptchaSiteKey =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -48,12 +51,13 @@ export default function RootLayout({
       className={`${jetbrainsMono.variable} ${baloo2.variable} ${plusJakartaSans.variable} ${outfit.variable}`}
     >
       <head>
-        {/* reCAPTCHA v3 - Production Key */}
-        {/* Test Key (Dev): 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI */}
-        <Script
-          src="https://www.google.com/recaptcha/api.js?render=6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh"
-          strategy="lazyOnload"
-        />
+        {recaptchaSiteKey ? (
+          <Script
+            id="recaptcha-script"
+            src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`}
+            strategy="afterInteractive"
+          />
+        ) : null}
       </head>
       <body className="antialiased">
         <div className="scroll-container">

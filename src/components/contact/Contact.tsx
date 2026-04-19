@@ -3,7 +3,6 @@ import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Link from "next/link";
-import emailjs from "@emailjs/browser";
 import "./stackedForm.css"
 
 // Declare grecaptcha type
@@ -17,6 +16,9 @@ declare global {
 }
 
 gsap.registerPlugin(ScrollTrigger);
+
+const RECAPTCHA_SITE_KEY =
+  process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
 
 export default function ContactSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -39,6 +41,27 @@ export default function ContactSection() {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
+    });
+  };
+
+  const waitForRecaptcha = (timeoutMs: number = 6000, intervalMs: number = 250): Promise<boolean> => {
+    if (typeof window === "undefined") return Promise.resolve(false);
+    if (window.grecaptcha) return Promise.resolve(true);
+
+    return new Promise((resolve) => {
+      const startedAt = Date.now();
+      const timer = window.setInterval(() => {
+        if (window.grecaptcha) {
+          window.clearInterval(timer);
+          resolve(true);
+          return;
+        }
+
+        if (Date.now() - startedAt >= timeoutMs) {
+          window.clearInterval(timer);
+          resolve(false);
+        }
+      }, intervalMs);
     });
   };
 
@@ -71,23 +94,25 @@ export default function ContactSection() {
     try {
       // 3. RECAPTCHA V3 - Bot protection with score
       let recaptchaToken = "";
-      if (typeof window !== "undefined" && window.grecaptcha) {
+      const hasRecaptcha = await waitForRecaptcha();
+      const siteKey = RECAPTCHA_SITE_KEY;
+
+      if (!siteKey) {
+        console.warn("⚠️ NEXT_PUBLIC_RECAPTCHA_SITE_KEY is not set.");
+      } else if (hasRecaptcha && typeof window !== "undefined" && window.grecaptcha) {
         try {
           // Wait for reCAPTCHA to be ready
           await new Promise<void>((resolve) => {
             window.grecaptcha.ready(() => resolve());
           });
-          
-          // Execute reCAPTCHA
-          // Production: 6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh
-          // Test: 6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
-          recaptchaToken = await window.grecaptcha.execute('6Lflt1gsAAAAAL-eFb-bGwQhNibsLn3c5q7AJguh', { action: 'submit' });
+
+          recaptchaToken = await window.grecaptcha.execute(siteKey, { action: 'submit' });
           console.log("✅ reCAPTCHA token generated:", recaptchaToken.substring(0, 20) + "...");
         } catch (error) {
           console.warn("⚠️ reCAPTCHA failed, continuing without it:", error);
         }
       } else {
-        console.warn("⚠️ reCAPTCHA not loaded yet");
+        console.warn("⚠️ reCAPTCHA script is unavailable. Check internet/ad blocker/key configuration.");
       }
 
       // 4. VERIFY RECAPTCHA WITH BACKEND
@@ -198,23 +223,6 @@ export default function ContactSection() {
       setIsSubmitting(false);
     }
   };
-
-  // Verify reCAPTCHA is loaded
-  useEffect(() => {
-    const checkRecaptcha = () => {
-      if (typeof window !== "undefined" && window.grecaptcha) {
-        window.grecaptcha.ready(() => {
-          console.log("✅ reCAPTCHA is ready and loaded successfully");
-        });
-      } else {
-        console.warn("⚠️ reCAPTCHA script not detected. Check if script is loaded in layout.tsx");
-      }
-    };
-
-    // Check after a short delay to ensure script has loaded
-    const timer = setTimeout(checkRecaptcha, 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;

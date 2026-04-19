@@ -1,8 +1,8 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 import { getProjectBySlug, getAllProjectSlugs } from "@/constants/details";
+import ProjectGallery from "@/components/projectShowCase/ProjectGallery";
 
 // Generate static params for all projects
 export function generateStaticParams() {
@@ -38,7 +38,10 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             : "bg-[#008cff]/10 text-[#008cff] border-[#008cff]/20",
     };
 
-    const remainingPhotos = project.photos.slice(1);
+    const galleryPhotos =
+        project.slug === "community-finance"
+            ? project.photos
+            : project.photos.slice(1);
 
     return (
         <main className="min-h-screen bg-[#0a0a0a]">
@@ -208,54 +211,12 @@ export default async function ProjectDetailPage({ params }: PageProps) {
             </section>
 
             {/* ========== SECTION 3: GALLERY ========== */}
-            {remainingPhotos.length > 0 && (
-                <section className="py-12 md:py-20 border-t border-white/5 animate-fadeInUp animation-delay-400">
-                    <div className="container mx-auto px-6">
-                        <h2 className="text-2xl md:text-3xl font-bold text-white mb-8 text-center md:text-start">
-                            Project Gallery
-                        </h2>
-
-                        {/* Dynamic Grid based on image count */}
-                        <div className={`grid gap-6 ${
-                            remainingPhotos.length === 1 
-                                ? 'grid-cols-1' 
-                                : remainingPhotos.length === 2 
-                                    ? 'grid-cols-1 md:grid-cols-2' 
-                                    : 'grid-cols-1 md:grid-cols-2'
-                        }`}>
-                            {remainingPhotos.map((photo, index) => (
-                                <div 
-                                    key={index}
-                                    className={`relative rounded-xl overflow-hidden group ${
-                                        // Make the first image span full width if there are 3 images
-                                        remainingPhotos.length === 3 && index === 0 
-                                            ? 'md:col-span-2 h-[250px] md:h-[400px]' 
-                                            : 'h-[250px] md:h-[300px]'
-                                    }`}
-                                    style={{
-                                        opacity: 0,
-                                        transform: 'translateY(20px)',
-                                        animation: `fadeInUp 0.6s ease-out ${0.2 + index * 0.15}s forwards`
-                                    }}
-                                >
-                                    <Image
-                                        src={photo || "/placeholder.jpg"}
-                                        alt={`${project.title} Screenshot ${index + 2}`}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                    />
-                                    {/* Hover Overlay */}
-                                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${theme.bg}`} />
-                                    
-                                    {/* Fallback */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-4xl uppercase tracking-tighter -z-10">
-                                        Screenshot {index + 2}
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+            {galleryPhotos.length > 0 && (
+                <ProjectGallery
+                    photos={galleryPhotos}
+                    title={project.title}
+                    accentColor={theme.primaryHex}
+                />
             )}
 
             {/* ========== FOOTER CTA ========== */}

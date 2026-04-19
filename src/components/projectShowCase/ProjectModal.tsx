@@ -71,6 +71,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
     
     // Track if component is mounted (client-side only)
     const [isMounted, setIsMounted] = useState(false);
+    const [previewImage, setPreviewImage] = useState<string | null>(null);
 
     // Determine if project is under development
     const isLocked = project?.isUnderDevelopment ?? false;
@@ -109,6 +110,8 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
     const animateOut = useCallback(() => {
         if (!backdropRef.current || !modalRef.current) return;
+
+        setPreviewImage(null);
 
         // Kill any existing timeline
         timelineRef.current?.kill();
@@ -150,13 +153,18 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape" && isOpen) {
+                if (previewImage) {
+                    setPreviewImage(null);
+                    return;
+                }
+
                 animateOut();
             }
         };
 
         window.addEventListener("keydown", handleEsc);
         return () => window.removeEventListener("keydown", handleEsc);
-    }, [isOpen, animateOut]);
+    }, [isOpen, animateOut, previewImage]);
 
     // Handle backdrop click
     const handleBackdropClick = (e: React.MouseEvent) => {
@@ -179,6 +187,38 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
             aria-modal="true"
             aria-labelledby="modal-title"
         >
+            {previewImage && (
+                <div
+                    className="absolute inset-0 z-[10000] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+                    onClick={() => setPreviewImage(null)}
+                >
+                    <button
+                        onClick={(event) => {
+                            event.stopPropagation();
+                            setPreviewImage(null);
+                        }}
+                        className="absolute top-4 right-4 z-[10001] w-10 h-10 rounded-full bg-black/70 border border-white/20 flex items-center justify-center text-white/80 hover:text-white hover:bg-black transition-all duration-200"
+                        aria-label="Close image preview"
+                    >
+                        <CloseIcon />
+                    </button>
+
+                    <div
+                        className="relative w-full max-w-6xl h-[80vh] rounded-xl overflow-hidden border border-white/20"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <Image
+                            src={previewImage}
+                            alt="Project image preview"
+                            fill
+                            className="object-contain bg-black"
+                            sizes="100vw"
+                            priority
+                        />
+                    </div>
+                </div>
+            )}
+
             {/* Modal Container */}
             <div
                 ref={modalRef}
@@ -306,9 +346,12 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                                             </h3>
                                             <div className={`grid gap-4 ${project.images.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                                                 {project.images.slice(0, 2).map((img, i) => (
-                                                    <div
+                                                    <button
                                                         key={i}
-                                                        className="relative aspect-video rounded-lg overflow-hidden border border-white/10 bg-white/5 group/img"
+                                                        type="button"
+                                                        onClick={() => setPreviewImage(img)}
+                                                        className="relative aspect-video rounded-lg overflow-hidden border border-white/10 bg-white/5 group/img cursor-zoom-in"
+                                                        aria-label={`Open preview ${i + 1} for ${project.title}`}
                                                     >
                                                         {/* Image */}
                                                         <Image
@@ -320,7 +363,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                                                         />
                                                         {/* Gradient overlay */}
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
-                                                    </div>
+                                                    </button>
                                                 ))}
                                             </div>
                                         </div>
