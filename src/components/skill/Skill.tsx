@@ -8,11 +8,11 @@ const skills = [
   },
   {
     category: "Backend",
-    items: ["Node.js", "PHP", "Express", "Laravel", "MySQL", "PostgreSQL", "Prisma", "Drizzle", "Supabase", "Redis"],
+    items: ["Node.js", "PHP", "Express", "Laravel", "MySQL", "PostgreSQL", "Prisma", "Drizzle", "Redis"],
   },
   {
     category: "Tools & Others",
-    items: ["Git", "Docker", "Figma", "AWS", "Vercel", "CI/CD"],
+    items: ["Git", "Docker", "Figma", "AWS", "Vercel", "CI/CD", "Supabase", "Firebase", "Midtrans", "Gemini API"],
   },
 ];
 

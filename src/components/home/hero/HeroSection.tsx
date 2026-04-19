@@ -127,12 +127,12 @@ export default function HeroSection() {
             className="absolute left-0 right-0 top-1/2 -translate-y-1/2 font-jakarta text-[1rem] md:text-4xl lg:text-5xl font-light text-white px-8 whitespace-nowrap"
           />
 
-          <div ref={secondTextWrapperRef} className="opacity-0"> 
+          <div ref={secondTextWrapperRef} className="opacity-0 "> 
             <ShinyText
               text="That's why I choose Full-Stack"
               disabled={false}
               speed={3}
-              className="font-baloo-2 text-[1.2rem] md:text-5xl lg:text-6xl font-black px-8 whitespace-nowrap"
+              className="font-baloo-2 text-[1.2rem] md:text-5xl lg:text-6xl font-black px-8 pb-2 whitespace-nowrap"
               color="#b5b5b5"
               shineColor="#ffffff"
               spread={120}

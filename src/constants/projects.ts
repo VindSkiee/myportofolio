@@ -29,9 +29,9 @@ export const MEGA_PROJECT: MegaProjectItem = {
     id: 0,
     title: "Collabs",
     category: "Enterprise Platform",
-    description: "A real-time collaboration platform. Faster than Teams, simpler than Slack.",
+    description: "A real-time collaboration platform AI integrated. Faster than Teams, simpler than Slack.",
     fullDescription: "Collabs is an enterprise-grade real-time collaboration platform designed to streamline team communication. Built with a microservices architecture, it features instant messaging, file sharing, video conferencing, and project management tools. The platform leverages WebSockets for real-time updates and Redis for high-performance caching.",
-    tech: ["Express", "Next.js", "WebSockets", "Redis"],
+    tech: ["Express", "TypeScript", "TanStack Query", "WebSockets", "Redis", "Gemini API"],
     status: "ongoing",
     brandColor: "#14b8a6",
     isUnderDevelopment: true, // Ongoing = Under Development
@@ -54,7 +54,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
         span: "md:col-span-2",
         isUnderDevelopment: false,
         images: ["/projects/truck_1.jpg", "/projects/truck_2.jpg"],
-        liveUrl: "https://truck-monitor.example.com",
         repoUrl: "https://github.com/VindSkiee/truck-monitoring",
     },
     {
@@ -80,7 +79,6 @@ export const PROJECTS_DATA: ProjectItem[] = [
         span: "md:col-span-3",
         isUnderDevelopment: false,
         images: ["/projects/attendance_1.png", "/projects/attendance_2.png"],
-        liveUrl: "https://attendance.example.com",
         repoUrl: "https://github.com/VindSkiee/attendance-system",
     },
     {
@@ -89,7 +87,7 @@ export const PROJECTS_DATA: ProjectItem[] = [
         category: "RBAC + CRUD + Payment Gateway",
         description: "Finance workflow + event funding with role-based permissions and Midtrans integration.",
         fullDescription: "A comprehensive financial management and event organizer system for community organizations. It supports configurable RBAC roles for administrators, finance officers, and members, complete with invoicing, expense tracking, and event funding workflows. Midtrans integration enables secure payment processing and reliable transaction handling.",
-        tech: ["Next.js", "React", "MySQL", "Midtrans", "Tailwind CSS"],
+        tech: ["Nest.js", "TypeScript", "React", "MySQL", "Midtrans", "Tailwind CSS"],
         span: "md:col-span-3",
         isUnderDevelopment: false,
         images: ["/projects/event_1.png", "/projects/event_2.png"],

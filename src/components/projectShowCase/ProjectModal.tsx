@@ -296,7 +296,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                                 /* ========== FINISHED PROJECT STATE ========== */
                                 <div className="p-6 md:p-8">
                                     {/* Header */}
-                                    <div className="mb-6 pr-12">
+                                    <div className="mb-3 pr-12">
                                         <span
                                             className="text-xs font-mono uppercase tracking-widest mb-2 block"
                                             style={{ color: accentColor }}
@@ -316,7 +316,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                                         {project.tech.map((t, i) => (
                                             <span
                                                 key={i}
-                                                className="px-3 py-1.5 text-xs font-medium rounded-full backdrop-blur-md border"
+                                                className="px-2 py-1 text-xs font-medium rounded-full backdrop-blur-md border"
                                                 style={{
                                                     color: accentColor,
                                                     backgroundColor: `${accentColor}15`,
@@ -330,7 +330,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
                                     {/* Description */}
                                     <div className="mb-8">
-                                        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">
+                                        <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-0.5">
                                             Overview
                                         </h3>
                                         <p className="text-white/60 leading-relaxed">
@@ -340,8 +340,8 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
                                     {/* Images Grid (Max 2) */}
                                     {project.images && project.images.length > 0 && (
-                                        <div className="mb-8">
-                                            <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-3">
+                                        <div className="mb-4">
+                                            <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-1">
                                                 Preview
                                             </h3>
                                             <div className={`grid gap-4 ${project.images.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
@@ -370,7 +370,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
                                     )}
 
                                     {/* Action Buttons */}
-                                    <div className="flex flex-wrap gap-3 pt-4 border-t border-white/10">
+                                    <div className="flex flex-wrap gap-3 pt-2">
                                         {project.liveUrl && (
                                             <a
                                                 href={project.liveUrl}

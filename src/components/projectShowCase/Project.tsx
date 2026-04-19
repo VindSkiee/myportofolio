@@ -362,7 +362,7 @@ export default function ProjectsSection() {
                 </div>
 
                 {/* View All Button */}
-                <div className="mt-16 flex justify-center pb-10 p-10">
+                <div className="mt-16 flex justify-center py-10 pb-2">
                     <button
                         type="button"
                         onClick={() =>
@@ -370,7 +370,7 @@ export default function ProjectsSection() {
                         }
                         className="btn-neon"
                     >
-                        View Entire Archive on GitHub
+                        View Other Projects on GitHub
                     </button>
 
                 </div>

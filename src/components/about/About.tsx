@@ -123,17 +123,6 @@ export default function AboutSection() {
                                 Consistent weight training keeps my discipline sharp, reinforcing the mindset that growth comes from progressive overload.
                             </p>
                         </div>
-
-                        <div className="mt-10 grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
-                            <div>
-                                <h4 className="text-3xl font-bold text-white">2+</h4>
-                                <p className="text-sm text-white/40 uppercase tracking-wider mt-1">Years Experience</p>
-                            </div>
-                            <div>
-                                <h4 className="text-3xl font-bold text-white">10+</h4>
-                                <p className="text-sm text-white/40 uppercase tracking-wider mt-1">Projects Completed</p>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
