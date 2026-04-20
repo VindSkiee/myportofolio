@@ -13,38 +13,45 @@ export default function AboutSection() {
     const imageRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // ... (LOGIKA GSAP SAMA PERSIS SEPERTI SEBELUMNYA, TIDAK ADA YANG DIUBAH) ...
         const section = sectionRef.current;
         const content = contentRef.current;
         const image = imageRef.current;
 
         if (!section || !content || !image) return;
 
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: section,
-                scroller: ".scroll-container",
-                start: "top 80%",
-                end: "bottom 20%",
-                toggleActions: "play none none reverse",
-            },
-        });
+        // 1. Cari elemen DOM-nya (dicari secara global oleh document)
+        const scrollContainer = document.querySelector(".scroll-container");
 
-        tl.fromTo(
-            image,
-            { y: 50, opacity: 0 },
-            { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
-        );
+        // 2. Berikan elemen DOM-nya langsung, bukan string-nya!
+        const scrollerTarget = scrollContainer ? scrollContainer : window;
 
-        tl.fromTo(
-            content,
-            { y: 30, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
-            "-=0.5"
-        );
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    scroller: scrollerTarget, // Sekarang ini aman!
+                    start: "top 80%",
+                    end: "bottom 20%",
+                    toggleActions: "play none none reverse",
+                },
+            });
+
+            tl.fromTo(
+                image,
+                { y: 50, opacity: 0 },
+                { y: 0, opacity: 1, duration: 1, ease: "power3.out" }
+            );
+
+            tl.fromTo(
+                content,
+                { y: 30, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+                "-=0.5"
+            );
+        }, sectionRef);
 
         return () => {
-            ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+            ctx.revert();
         };
     }, []);
 
@@ -65,7 +72,7 @@ export default function AboutSection() {
 
                         {/* Wrapper untuk mengatur ukuran kartu */}
                         {/* WRAPPER UTAMA: Mengatur Ukuran Kartu di sini */}
-                        <div className="w-[260px] h-[340px] md:w-[320px] md:h-[430px] relative mt-10 md:mb-16 md:right-24">
+                        <div className="w-[260px] h-[340px] md:w-[320px] md:h-[430px] relative mt-14 md:mb-16 md:right-24">
 
                             {/* IMPLEMENTASI CARD CSS */}
                             <div className="profile-card group cursor-pointer">

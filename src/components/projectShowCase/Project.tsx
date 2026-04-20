@@ -323,7 +323,7 @@ export default function ProjectsSection() {
                                 {/* Background */}
                                 <div className="relative w-full h-full bg-[#1a1a1a] group-hover:scale-105 transition-transform duration-700 ease-in-out">
                                     {/* Fallback Text (Shows behind) */}
-                                    <div className="absolute inset-0 flex items-center justify-center text-white/5 font-bold text-6xl uppercase tracking-tighter">
+                                    <div className="absolute inset-0 flex items-center md:text-6xl justify-center text-white/5 font-bold text-5xl uppercase tracking-tighter">
                                         {project.category.split(" ")[0]}
                                     </div>
                                 </div>
