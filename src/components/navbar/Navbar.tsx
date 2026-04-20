@@ -7,17 +7,31 @@ import "./navButton.css";
 // Ini membantu TypeScript mengerti struktur komponen.
 interface NavbarProps {
     className?: string; // Opsional: Berjaga-jaga jika nanti butuh custom class
+    isInteractionLocked?: boolean;
 }
 
 // 2. Masukkan tipe generic: <TipeRef, TipeProps>
 // TipeRef = HTMLElement (karena ini elemen <nav>)
 // TipeProps = NavbarProps
-const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
+const Navbar = forwardRef<HTMLElement, NavbarProps>(({ className, isInteractionLocked = false }, ref) => {
+    const handleLockedClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+        if (isInteractionLocked) {
+            event.preventDefault();
+        }
+    };
+
+    const menuItems = [
+        { label: "About", href: "#about" },
+        { label: "Skill", href: "#skill" },
+        { label: "Project", href: "#project" },
+        { label: "Contact", href: "#contact" },
+    ];
+
     return (
         <nav
             ref={ref}
             // Gabungkan className default dengan props.className (jika ada)
-            className={`absolute top-0 left-0 right-0 z-50 flex justify-between items-center px-8 py-6 opacity-0 ${props.className || ""}`}
+            className={`absolute top-0 left-0 right-0 z-50 flex justify-between items-center px-8 py-6 opacity-0 ${className || ""}`}
         >
             {/* Logo */}
             <div className="font-jakarta font-bold text-xl text-white tracking-tighter cursor-pointer">
@@ -26,18 +40,21 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
 
             {/* Menu Links */}
             <div className="hidden md:flex gap-8 font-jakarta text-sm font-medium text-white/80">
-                <Link href="#about" className="hover:text-white transition-colors duration-300">
-                    About
-                </Link>
-                <Link href="#skill" className="hover:text-white transition-colors duration-300">
-                    Skill
-                </Link>
-                <Link href="#project" className="hover:text-white transition-colors duration-300">
-                    Project
-                </Link>
-                <Link href="#contact" className="hover:text-white transition-colors duration-300">
-                    Contact
-                </Link>
+                {menuItems.map((item) => (
+                    <Link
+                        key={item.href}
+                        href={item.href}
+                        aria-disabled={isInteractionLocked}
+                        tabIndex={isInteractionLocked ? -1 : 0}
+                        onClick={handleLockedClick}
+                        className={`transition-colors duration-300 ${isInteractionLocked
+                            ? "cursor-not-allowed text-white/30"
+                            : "hover:text-white"
+                            }`}
+                    >
+                        {item.label}
+                    </Link>
+                ))}
             </div>
 
             {/* CTA Button */}
@@ -45,7 +62,10 @@ const Navbar = forwardRef<HTMLElement, NavbarProps>((props, ref) => {
                 href="https://mail.google.com/mail/?view=cm&fs=1&to=arvindalaric321@gmail.com&su=Let's%20Work%20Together&body=Hi%20Arvind,%0A%0AI%20would%20like%20to%20discuss..."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-neon inline-block"
+                aria-disabled={isInteractionLocked}
+                tabIndex={isInteractionLocked ? -1 : 0}
+                onClick={handleLockedClick}
+                className={`btn-neon inline-block ${isInteractionLocked ? "pointer-events-none opacity-40" : ""}`}
             >
                 Let&apos;s Talk
             </a>

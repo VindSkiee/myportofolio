@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useLayoutEffect } from "react";
+import React, { useRef, useLayoutEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Beams from "../Beams";
@@ -17,8 +17,68 @@ export default function HeroSection() {
   const firstTextRef = useRef<HTMLHeadingElement>(null);
   const secondTextWrapperRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const [isScrollLocked, setIsScrollLocked] = useState(true);
 
   useLayoutEffect(() => {
+    const scrollContainer = document.querySelector(".scroll-container") as HTMLElement | null;
+    const blockedKeys = new Set([
+      "Space",
+      "PageUp",
+      "PageDown",
+      "End",
+      "Home",
+      "ArrowUp",
+      "ArrowDown",
+      " ",
+    ]);
+
+    let introRefreshTimeoutId: number | null = null;
+    let isLockReleased = false;
+
+    const preventWheel = (event: WheelEvent) => {
+      event.preventDefault();
+    };
+
+    const preventTouchMove = (event: TouchEvent) => {
+      event.preventDefault();
+    };
+
+    const preventScrollKeys = (event: KeyboardEvent) => {
+      if (blockedKeys.has(event.code) || blockedKeys.has(event.key)) {
+        event.preventDefault();
+      }
+    };
+
+    const unlockScroll = (updateLockState: boolean = true) => {
+      if (isLockReleased) return;
+      isLockReleased = true;
+
+      if (scrollContainer) {
+        scrollContainer.classList.remove("scroll-locked");
+        scrollContainer.removeAttribute("data-scroll-locked");
+      }
+
+      window.removeEventListener("wheel", preventWheel);
+      window.removeEventListener("touchmove", preventTouchMove);
+      window.removeEventListener("keydown", preventScrollKeys);
+
+      if (updateLockState) {
+        setIsScrollLocked(false);
+      }
+    };
+
+    if (scrollContainer) {
+      scrollContainer.classList.add("scroll-locked");
+      scrollContainer.setAttribute("data-scroll-locked", "true");
+      scrollContainer.scrollTop = 0;
+
+      window.addEventListener("wheel", preventWheel, { passive: false });
+      window.addEventListener("touchmove", preventTouchMove, { passive: false });
+      window.addEventListener("keydown", preventScrollKeys, { passive: false });
+    } else {
+      setIsScrollLocked(false);
+    }
+
     const ctx = gsap.context(() => {
       const container = containerRef.current;
       const strip = stripRef.current;
@@ -27,7 +87,10 @@ export default function HeroSection() {
       const secondText = secondTextWrapperRef.current;
       const nav = navRef.current;
 
-      if (!container || !strip || !beamsContent || !firstText || !secondText) return;
+      if (!container || !strip || !beamsContent || !firstText || !secondText) {
+        unlockScroll();
+        return;
+      }
 
       // --- SETUP FIRST TEXT ---
       const firstTextContent = "I stand between backend and frontend";
@@ -53,15 +116,15 @@ export default function HeroSection() {
         onComplete: () => {
           // PENTING: Buat ScrollTrigger SETELAH animasi intro selesai
           // Gunakan .scroll-container sebagai scroller untuk menghindari stuttering
-          const scrollContainer = document.querySelector(".scroll-container");
+          const scrollContainerElement = document.querySelector(".scroll-container");
           
-          if (secondText && container && scrollContainer) {
+          if (secondText && container && scrollContainerElement) {
             gsap.to(secondText, {
               x: -500, 
               opacity: 0, 
               scrollTrigger: {
                 trigger: container,
-                scroller: scrollContainer, // Gunakan .scroll-container
+                scroller: scrollContainerElement, // Gunakan .scroll-container
                 start: "top top", 
                 end: "bottom top", 
                 scrub: true, // Gunakan true untuk smoother animation
@@ -70,8 +133,11 @@ export default function HeroSection() {
             });
           }
           
-          // Refresh ScrollTrigger setelah setup dengan delay
-          setTimeout(() => ScrollTrigger.refresh(), 100);
+          // Refresh ScrollTrigger setelah setup dengan delay lalu lepaskan scroll lock
+          introRefreshTimeoutId = window.setTimeout(() => {
+            ScrollTrigger.refresh();
+            unlockScroll();
+          }, 100);
         }
       });
 
@@ -88,13 +154,19 @@ export default function HeroSection() {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    return () => {
+      if (introRefreshTimeoutId !== null) {
+        window.clearTimeout(introRefreshTimeoutId);
+      }
+      ctx.revert();
+      unlockScroll(false);
+    };
   }, []);
 
   return (
     <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-white">
       
-      <Navbar ref={navRef} />
+      <Navbar ref={navRef} isInteractionLocked={isScrollLocked} />
 
       {/* STRIP WINDOW */}
       <div

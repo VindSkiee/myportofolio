@@ -37,6 +37,12 @@ html, body {
   will-change: scroll-position;
 }
 
+.scroll-container.scroll-locked {
+  overflow-y: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 /* --- Styling Scrollbar pada Wrapper --- */
 .scroll-container::-webkit-scrollbar {
   width: 8px;

@@ -27,11 +27,11 @@ export interface MegaProjectItem extends Omit<ProjectItem, 'span'> {
 // ============================================
 export const MEGA_PROJECT: MegaProjectItem = {
     id: 0,
-    title: "Collabs",
+    title: "Collabs - AI Workspace",
     category: "Enterprise Platform",
     description: "A real-time collaboration platform AI integrated. Faster than Teams, simpler than Slack.",
     fullDescription: "Collabs is an enterprise-grade real-time collaboration platform designed to streamline team communication. Built with a microservices architecture, it features instant messaging, file sharing, video conferencing, and project management tools. The platform leverages WebSockets for real-time updates and Redis for high-performance caching.",
-    tech: ["Express", "TypeScript", "TanStack Query", "WebSockets", "Redis", "Gemini API"],
+    tech: ["Express", "TypeScript", "React", "Framer Motion", "TanStack Query", "WebSockets", "Redis", "Gemini API"],
     status: "ongoing",
     brandColor: "#14b8a6",
     isUnderDevelopment: true, // Ongoing = Under Development
