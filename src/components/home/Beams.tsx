@@ -271,6 +271,14 @@ const Beams: FC<BeamsProps> = ({
     [speed, noiseIntensity, scale]
   );
 
+  useEffect(() => {
+    return () => {
+      if (beamMaterial) {
+        beamMaterial.dispose();
+      }
+    };
+  }, [beamMaterial]);
+
   return (
     <CanvasWrapper isActive={isActive} lowPowerMode={lowPowerMode}>
       <group rotation={[0, 0, degToRad(rotation)]}>
@@ -363,6 +371,15 @@ const MergedPlanes = forwardRef<
     () => createStackedPlanesBufferGeometry(count, width, height, 0, heightSegments),
     [count, width, height, heightSegments]
   );
+
+  useEffect(() => {
+    return () => {
+      if (geometry) {
+        geometry.dispose();
+      }
+    };
+  }, [geometry]);
+
   useFrame((_, delta) => {
     if (!isActive) return;
     mesh.current.material.uniforms.time.value += 0.1 * delta;
