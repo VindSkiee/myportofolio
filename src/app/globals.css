@@ -203,3 +203,11 @@ html, body {
 .animate-shimmer-sync {
   background-position: linear-gradient(90deg, #0d9488 0%, #14b8a6 15%, #06b6d4 30%, rgba(255,255,255,0.95) 50%, #22d3ee 70%, #38bdf8 85%, #0d9488 100%);
 }
+
+/* Stabilize large animated gradient layer during GSAP reveal to avoid blink/flicker. */
+.mega-spotlight-shell {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  isolation: isolate;
+}

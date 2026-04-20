@@ -68,6 +68,7 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
     const backdropRef = useRef<HTMLDivElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
     const timelineRef = useRef<gsap.core.Timeline | null>(null);
+    const isAnimatingRef = useRef(false);
     
     // Track if component is mounted (client-side only)
     const [isMounted, setIsMounted] = useState(false);
@@ -90,22 +91,51 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
         // Kill any existing timeline
         timelineRef.current?.kill();
+        isAnimatingRef.current = true;
 
-        const tl = gsap.timeline();
+        gsap.set(backdropRef.current, {
+            display: "flex",
+            autoAlpha: 0,
+            willChange: "opacity",
+        });
+        gsap.set(modalRef.current, {
+            autoAlpha: 0,
+            y: 16,
+            scale: 0.98,
+            force3D: true,
+            transformOrigin: "50% 50%",
+            willChange: "transform, opacity",
+        });
+
+        const tl = gsap.timeline({
+            onComplete: () => {
+                isAnimatingRef.current = false;
+                if (backdropRef.current) {
+                    gsap.set(backdropRef.current, { clearProps: "willChange" });
+                }
+                if (modalRef.current) {
+                    gsap.set(modalRef.current, { clearProps: "willChange" });
+                }
+            },
+        });
         timelineRef.current = tl;
 
-        tl.set(backdropRef.current, { display: "flex" })
-            .fromTo(
-                backdropRef.current,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.3, ease: "power2.out" }
-            )
-            .fromTo(
-                modalRef.current,
-                { opacity: 0, scale: 0.9, y: 20 },
-                { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" },
-                "-=0.15"
-            );
+        tl.to(backdropRef.current, {
+            autoAlpha: 1,
+            duration: 0.22,
+            ease: "power2.out",
+        }).to(
+            modalRef.current,
+            {
+                autoAlpha: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.28,
+                ease: "power3.out",
+                force3D: true,
+            },
+            0.02
+        );
     }, []);
 
     const animateOut = useCallback(() => {
@@ -115,25 +145,42 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
 
         // Kill any existing timeline
         timelineRef.current?.kill();
+        isAnimatingRef.current = true;
+
+        gsap.set(backdropRef.current, { willChange: "opacity" });
+        gsap.set(modalRef.current, { willChange: "transform, opacity" });
 
         const tl = gsap.timeline({
             onComplete: () => {
                 if (backdropRef.current) {
-                    gsap.set(backdropRef.current, { display: "none" });
+                    gsap.set(backdropRef.current, {
+                        display: "none",
+                        clearProps: "willChange",
+                    });
                 }
+                if (modalRef.current) {
+                    gsap.set(modalRef.current, {
+                        clearProps: "willChange",
+                    });
+                }
+                isAnimatingRef.current = false;
                 onClose();
             }
         });
         timelineRef.current = tl;
 
         tl.to(modalRef.current, {
-            opacity: 0,
-            scale: 0.9,
-            y: 20,
-            duration: 0.25,
+            autoAlpha: 0,
+            scale: 0.98,
+            y: 14,
+            duration: 0.2,
             ease: "power2.in"
         })
-            .to(backdropRef.current, { opacity: 0, duration: 0.2 }, "-=0.1");
+            .to(
+                backdropRef.current,
+                { autoAlpha: 0, duration: 0.16, ease: "power1.in" },
+                0.04
+            );
     }, [onClose]);
 
     // ========== EFFECTS ==========
@@ -145,6 +192,8 @@ export default function ProjectModal({ project, isOpen, onClose }: ProjectModalP
         }
 
         return () => {
+            timelineRef.current?.kill();
+            isAnimatingRef.current = false;
             document.body.style.overflow = "";
         };
     }, [isOpen, project, animateIn]);

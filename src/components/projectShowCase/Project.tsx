@@ -28,71 +28,112 @@ export default function ProjectsSection() {
     // Close Modal Handler
     const closeModal = () => {
         setIsModalOpen(false);
-        // Delay clearing the project to allow exit animation
-        setTimeout(() => setSelectedProject(null), 300);
+        setSelectedProject(null);
     };
 
     useEffect(() => {
         const section = sectionRef.current;
         const title = titleRef.current;
         const grid = gridRef.current;
+        const megaCard = megaRef.current;
+        const megaSpotlightShell = megaCard?.querySelector(".mega-spotlight-shell") as HTMLDivElement | null;
 
         if (!section || !title || !grid) return;
 
         // --- FIX: DETEKSI SCROLLER OTOMATIS ---
         // Cek apakah .scroll-container ada di DOM. Jika tidak, fallback ke window.
-        const scrollContainer = document.querySelector(".scroll-container");
-        const scrollerTarget = scrollContainer ? ".scroll-container" : window;
+        const scrollContainer = document.querySelector(".scroll-container") as HTMLElement | null;
 
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: section,
-                scroller: scrollerTarget, // PENTING: Gunakan scroll container kamu
-                start: "top 70%", // Animasi mulai saat bagian atas section masuk 70% layar
-                end: "bottom 20%",
-                toggleActions: "play none none reverse",
-            },
+        const ctx = gsap.context(() => {
+            const cards = Array.from(grid.querySelectorAll(".project-card"));
+
+            gsap.set([title, ...(megaCard ? [megaCard] : []), ...cards], {
+                willChange: "transform, opacity",
+            });
+
+            if (megaSpotlightShell) {
+                gsap.set(megaSpotlightShell, {
+                    willChange: "opacity, transform",
+                    backfaceVisibility: "hidden",
+                    WebkitBackfaceVisibility: "hidden",
+                    transformPerspective: 1000,
+                });
+            }
+
+            const tl = gsap.timeline({
+                defaults: { ease: "power3.out" },
+                scrollTrigger: {
+                    trigger: section,
+                    scroller: scrollContainer ?? undefined,
+                    start: "top 74%",
+                    once: true,
+                    fastScrollEnd: true,
+                },
+                onComplete: () => {
+                    gsap.set([title, ...(megaCard ? [megaCard] : []), ...cards], {
+                        clearProps: "willChange",
+                    });
+
+                    if (megaSpotlightShell) {
+                        gsap.set(megaSpotlightShell, {
+                            clearProps: "willChange",
+                        });
+                    }
+                },
+            });
+
+            // 1. Title Animation (Hapus opacity-0 dari HTML, handle di sini)
+            tl.fromTo(
+                title,
+                { y: 44, autoAlpha: 0, force3D: true },
+                { y: 0, autoAlpha: 1, duration: 0.68 }
+            );
+
+            // 2. Mega Project Animation
+            if (megaCard) {
+                tl.fromTo(
+                    megaCard,
+                    { y: 54, opacity: 0, scale: 0.99 },
+                    {
+                        y: 0,
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.72,
+                        immediateRender: false,
+                    },
+                    "-=0.32"
+                );
+            }
+
+            // 3. Grid Animation (Stagger Effect)
+            tl.fromTo(
+                cards,
+                { y: 64, autoAlpha: 0, scale: 0.985, force3D: true },
+                {
+                    y: 0,
+                    autoAlpha: 1,
+                    scale: 1,
+                    duration: 0.62,
+                    ease: "power2.out",
+                    stagger: 0.07,
+                },
+                "-=0.42"
+            );
+        }, section);
+
+        let rafA = 0;
+        let rafB = 0;
+
+        rafA = window.requestAnimationFrame(() => {
+            rafB = window.requestAnimationFrame(() => {
+                ScrollTrigger.refresh();
+            });
         });
 
-        // 1. Title Animation (Hapus opacity-0 dari HTML, handle di sini)
-        tl.fromTo(
-            title,
-            { y: 50, opacity: 0 },
-            { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" }
-        );
-
-        // 2. Mega Project Animation
-        const megaCard = megaRef.current;
-        if (megaCard) {
-            tl.fromTo(
-                megaCard,
-                { y: 80, opacity: 0, scale: 0.98 },
-                { y: 0, opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" },
-                "-=0.4"
-            );
-        }
-
-        // 3. Grid Animation (Stagger Effect)
-        const cards = grid.querySelectorAll(".project-card");
-        tl.fromTo(
-            cards,
-            { y: 100, opacity: 0, scale: 0.95 },
-            {
-                y: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 0.8,
-                ease: "power2.out", // Ganti easing yang lebih ringan
-                stagger: 0.1
-            },
-            "-=0.6"
-        );
-
-        // Refresh ScrollTrigger agar sinkron dengan layout baru
-        ScrollTrigger.refresh();
-
         return () => {
-            ScrollTrigger.getAll().forEach((t) => t.kill());
+            window.cancelAnimationFrame(rafA);
+            window.cancelAnimationFrame(rafB);
+            ctx.revert();
         };
     }, []);
 
@@ -145,7 +186,7 @@ export default function ProjectsSection() {
                     */}
 
                     <div
-                        className="p-[2px] rounded-2xl bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(20,184,166,0.4)]"
+                        className="mega-spotlight-shell p-[2px] rounded-2xl bg-shimmer-prismatic-sync bg-[length:200%_100%] animate-shimmer-sync overflow-hidden transition-all duration-500 hover:shadow-[0_0_60px_rgba(20,184,166,0.4)]"
                     >
                         {/* ========== INNER CARD (Dark Content Area) ========== */}
                         <div

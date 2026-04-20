@@ -10,6 +10,15 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+const isIOSBrowser = () => {
+  if (typeof navigator === "undefined") return false;
+
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+  );
+};
+
 export default function HeroSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const stripRef = useRef<HTMLDivElement>(null);
@@ -21,6 +30,7 @@ export default function HeroSection() {
 
   useLayoutEffect(() => {
     const scrollContainer = document.querySelector(".scroll-container") as HTMLElement | null;
+    const isIOSDevice = isIOSBrowser();
     const blockedKeys = new Set([
       "Space",
       "PageUp",
@@ -34,6 +44,15 @@ export default function HeroSection() {
 
     let introRefreshTimeoutId: number | null = null;
     let isLockReleased = false;
+    const initialScrollBehavior = scrollContainer?.style.scrollBehavior;
+
+    if (isIOSDevice) {
+      // iOS Safari/Chrome often fires frequent visual viewport resizes while scrolling.
+      ScrollTrigger.config({
+        ignoreMobileResize: true,
+        autoRefreshEvents: "visibilitychange,DOMContentLoaded,load",
+      });
+    }
 
     const preventWheel = (event: WheelEvent) => {
       event.preventDefault();
@@ -72,6 +91,10 @@ export default function HeroSection() {
       scrollContainer.setAttribute("data-scroll-locked", "true");
       scrollContainer.scrollTop = 0;
 
+      if (isIOSDevice) {
+        scrollContainer.style.scrollBehavior = "auto";
+      }
+
       window.addEventListener("wheel", preventWheel, { passive: false });
       window.addEventListener("touchmove", preventTouchMove, { passive: false });
       window.addEventListener("keydown", preventScrollKeys, { passive: false });
@@ -106,8 +129,14 @@ export default function HeroSection() {
       });
 
       // --- SETUP INITIAL STATES ---
-      if (nav) gsap.set(nav, { y: -20, opacity: 0 });
-      gsap.set(secondText, { opacity: 0, y: 20 });
+      if (nav) gsap.set(nav, { y: -20, opacity: 0, force3D: true });
+      gsap.set(secondText, {
+        opacity: 0,
+        y: 20,
+        force3D: true,
+        willChange: "transform, opacity",
+        backfaceVisibility: "hidden",
+      });
       gsap.set(strip, { width: 0, height: "100px" });
       gsap.set(beamsContent, { width: "100vw", height: "100vh" });
 
@@ -116,28 +145,53 @@ export default function HeroSection() {
         onComplete: () => {
           // PENTING: Buat ScrollTrigger SETELAH animasi intro selesai
           // Gunakan .scroll-container sebagai scroller untuk menghindari stuttering
-          const scrollContainerElement = document.querySelector(".scroll-container");
+          const scrollContainerElement = document.querySelector(".scroll-container") as HTMLElement | null;
           
           if (secondText && container && scrollContainerElement) {
-            gsap.to(secondText, {
-              x: -500, 
-              opacity: 0, 
-              scrollTrigger: {
-                trigger: container,
-                scroller: scrollContainerElement, // Gunakan .scroll-container
-                start: "top top", 
-                end: "bottom top", 
-                scrub: true, // Gunakan true untuk smoother animation
-                // markers: true, // Uncomment untuk debugging
-              }
+            const smoothX = gsap.quickTo(secondText, "x", {
+              duration: 0.18,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+
+            const smoothOpacity = gsap.quickTo(secondText, "opacity", {
+              duration: 0.18,
+              ease: "power2.out",
+              overwrite: "auto",
+            });
+
+            ScrollTrigger.create({
+              trigger: container,
+              scroller: scrollContainerElement,
+              start: "top top",
+              end: "bottom top",
+              fastScrollEnd: true,
+              invalidateOnRefresh: false,
+              onUpdate: (self) => {
+                // Keep the same visual path but smoothen per-frame updates.
+                const progress = self.progress;
+                smoothX(-500 * progress);
+                smoothOpacity(1 - progress);
+              },
             });
           }
           
           // Refresh ScrollTrigger setelah setup dengan delay lalu lepaskan scroll lock
           introRefreshTimeoutId = window.setTimeout(() => {
-            ScrollTrigger.refresh();
-            unlockScroll();
-          }, 100);
+            const finalizeIntro = () => {
+              ScrollTrigger.refresh();
+              unlockScroll();
+            };
+
+            if (isIOSDevice) {
+              requestAnimationFrame(() => {
+                requestAnimationFrame(finalizeIntro);
+              });
+              return;
+            }
+
+            finalizeIntro();
+          }, isIOSDevice ? 180 : 100);
         }
       });
 
@@ -158,6 +212,11 @@ export default function HeroSection() {
       if (introRefreshTimeoutId !== null) {
         window.clearTimeout(introRefreshTimeoutId);
       }
+
+      if (scrollContainer) {
+        scrollContainer.style.scrollBehavior = initialScrollBehavior ?? "";
+      }
+
       ctx.revert();
       unlockScroll(false);
     };
