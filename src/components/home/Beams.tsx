@@ -75,11 +75,32 @@ function extendMaterial<T extends THREE.Material = THREE.Material>(
   return mat;
 }
 
-const CanvasWrapper: FC<{ children: ReactNode }> = ({ children }) => (
-  <Canvas dpr={[1, 2]} frameloop="always" className="w-full h-full relative">
+const CanvasWrapper: FC<{ children: ReactNode; isActive: boolean; lowPowerMode: boolean }> = ({
+  children,
+  isActive,
+  lowPowerMode
+}) => (
+  <Canvas
+    dpr={lowPowerMode ? [0.75, 1.1] : [1, 2]}
+    frameloop={isActive ? 'always' : 'never'}
+    gl={{
+      antialias: !lowPowerMode,
+      powerPreference: lowPowerMode ? 'low-power' : 'high-performance'
+    }}
+    className="w-full h-full relative"
+  >
     {children}
   </Canvas>
 );
+
+const isIOSDevice = (): boolean => {
+  if (typeof navigator === 'undefined') return false;
+
+  return (
+    /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  );
+};
 
 const hexToNormalizedRGB = (hex: string): [number, number, number] => {
   const clean = hex.replace('#', '');
@@ -175,6 +196,7 @@ interface BeamsProps {
   noiseIntensity?: number;
   scale?: number;
   rotation?: number;
+  isActive?: boolean;
 }
 
 const Beams: FC<BeamsProps> = ({
@@ -185,9 +207,12 @@ const Beams: FC<BeamsProps> = ({
   speed = 2,
   noiseIntensity = 1.75,
   scale = 0.2,
-  rotation = 0
+  rotation = 0,
+  isActive = true
 }) => {
   const meshRef = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(null!);
+  const lowPowerMode = useMemo(() => isIOSDevice(), []);
+  const heightSegments = lowPowerMode ? 72 : 100;
 
   const beamMaterial = useMemo(
     () =>
@@ -247,9 +272,17 @@ const Beams: FC<BeamsProps> = ({
   );
 
   return (
-    <CanvasWrapper>
+    <CanvasWrapper isActive={isActive} lowPowerMode={lowPowerMode}>
       <group rotation={[0, 0, degToRad(rotation)]}>
-        <PlaneNoise ref={meshRef} material={beamMaterial} count={beamNumber} width={beamWidth} height={beamHeight} />
+        <PlaneNoise
+          ref={meshRef}
+          material={beamMaterial}
+          count={beamNumber}
+          width={beamWidth}
+          height={beamHeight}
+          heightSegments={heightSegments}
+          isActive={isActive}
+        />
         <DirLight color={lightColor} position={[0, 3, 10]} />
       </group>
       <ambientLight intensity={1} />
@@ -320,15 +353,18 @@ const MergedPlanes = forwardRef<
     width: number;
     count: number;
     height: number;
+    heightSegments: number;
+    isActive: boolean;
   }
->(({ material, width, count, height }, ref) => {
+>(({ material, width, count, height, heightSegments, isActive }, ref) => {
   const mesh = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(null!);
   useImperativeHandle(ref, () => mesh.current);
   const geometry = useMemo(
-    () => createStackedPlanesBufferGeometry(count, width, height, 0, 100),
-    [count, width, height]
+    () => createStackedPlanesBufferGeometry(count, width, height, 0, heightSegments),
+    [count, width, height, heightSegments]
   );
   useFrame((_, delta) => {
+    if (!isActive) return;
     mesh.current.material.uniforms.time.value += 0.1 * delta;
   });
   return <mesh ref={mesh} geometry={geometry} material={material} />;
@@ -342,9 +378,19 @@ const PlaneNoise = forwardRef<
     width: number;
     count: number;
     height: number;
+    heightSegments: number;
+    isActive: boolean;
   }
 >((props, ref) => (
-  <MergedPlanes ref={ref} material={props.material} width={props.width} count={props.count} height={props.height} />
+  <MergedPlanes
+    ref={ref}
+    material={props.material}
+    width={props.width}
+    count={props.count}
+    height={props.height}
+    heightSegments={props.heightSegments}
+    isActive={props.isActive}
+  />
 ));
 PlaneNoise.displayName = 'PlaneNoise';
 

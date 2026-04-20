@@ -27,6 +27,7 @@ export default function HeroSection() {
   const secondTextWrapperRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const [isScrollLocked, setIsScrollLocked] = useState(true);
+  const [isHeroInView, setIsHeroInView] = useState(true);
 
   useLayoutEffect(() => {
     const scrollContainer = document.querySelector(".scroll-container") as HTMLElement | null;
@@ -44,6 +45,7 @@ export default function HeroSection() {
 
     let introRefreshTimeoutId: number | null = null;
     let isLockReleased = false;
+    let heroVisibilityObserver: IntersectionObserver | null = null;
     const initialScrollBehavior = scrollContainer?.style.scrollBehavior;
 
     if (isIOSDevice) {
@@ -100,6 +102,21 @@ export default function HeroSection() {
       window.addEventListener("keydown", preventScrollKeys, { passive: false });
     } else {
       setIsScrollLocked(false);
+    }
+
+    const heroSection = containerRef.current;
+    if (heroSection && typeof IntersectionObserver !== "undefined") {
+      heroVisibilityObserver = new IntersectionObserver(
+        (entries) => {
+          setIsHeroInView(entries[0]?.isIntersecting ?? true);
+        },
+        {
+          root: scrollContainer,
+          threshold: 0.02,
+        }
+      );
+
+      heroVisibilityObserver.observe(heroSection);
     }
 
     const ctx = gsap.context(() => {
@@ -217,6 +234,8 @@ export default function HeroSection() {
         scrollContainer.style.scrollBehavior = initialScrollBehavior ?? "";
       }
 
+      heroVisibilityObserver?.disconnect();
+
       ctx.revert();
       unlockScroll(false);
     };
@@ -245,6 +264,7 @@ export default function HeroSection() {
             noiseIntensity={1.75}
             scale={0.2}
             rotation={30}
+            isActive={isHeroInView}
           />
         </div>
       </div>
@@ -261,7 +281,7 @@ export default function HeroSection() {
           <div ref={secondTextWrapperRef} className="opacity-0 "> 
             <ShinyText
               text="That's why I choose Full-Stack"
-              disabled={false}
+              disabled={!isHeroInView}
               speed={3}
               className="font-baloo-2 text-[1.2rem] md:text-5xl lg:text-6xl font-black px-8 pb-2 whitespace-nowrap"
               color="#b5b5b5"

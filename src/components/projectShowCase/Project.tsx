@@ -93,10 +93,9 @@ export default function ProjectsSection() {
             if (megaCard) {
                 tl.fromTo(
                     megaCard,
-                    { y: 54, opacity: 0, scale: 0.99 },
+                    { y: 54, scale: 0.99 },
                     {
                         y: 0,
-                        opacity: 1,
                         scale: 1,
                         duration: 0.72,
                         immediateRender: false,
